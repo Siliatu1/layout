@@ -1,0 +1,408 @@
+/* DetallePersonas.css - Estilo limpio y moderno */
+
+.detalle-container {
+    min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    background: white;
+    padding: 1rem 1.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-sizing: border-box;
+}
+
+/* Header con botón volver */
+.detalle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+/* Filtros botones */
+.filtros-botones {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn-filtro {
+    background: white;
+    border: 2px solid #e2e8f0;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    color: #64748b;
+}
+
+.btn-filtro:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-filtro.activo {
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-filtro.activo.inscritos {
+    background: #10b981;
+    border-color: #10b981;
+}
+
+.btn-filtro.activo.no-inscritos {
+    background: #ef4444;
+    border-color: #ef4444;
+}
+
+.btn-volver {
+    background: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #5D4E37;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+    background: #F5F1E8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.badge-faltantes {
+    background: #FF6B6B;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+/* Título */
+.detalle-title-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.detalle-title {
+    margin: 0;
+    color: #2D3748;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.detalle-title i {
+    color: #FF6B6B;
+    font-size: 1.8rem;
+}
+
+/* Lista de personas */
+.personas-lista {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.persona-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.persona-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.persona-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.persona-nombre {
+    margin: 0 0 0.5rem 0;
+    color: #1e293b;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.persona-detalles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detalle-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.detalle-label {
+    color: #64748b;
+    font-weight: 600;
+    min-width: 90px;
+}
+
+.detalle-texto {
+    color: #1e293b;
+    font-weight: 500;
+}
+
+/* Badges de inscripción */
+.badge-confirmada {
+    background: #d1fae5;
+    color: #059669;
+    padding: 0.35rem 0.9rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.badge-sin-reserva {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 0.35rem 0.9rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+/* Badges de asistencia */
+.badge-asistio {
+    background: #d1fae5;
+    color: #059669;
+    padding: 0.35rem 0.9rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.badge-no-asistio {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 0.35rem 0.9rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.badge-pendiente {
+    background: rgba(245, 219, 114, 0.404);
+    color:rgb(228, 159, 75);
+    padding: 0.35rem 0.9rem;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.btn-sin-reserva {
+    background: #FFE5E5;
+    color: #FF6B6B;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: default;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+}
+
+.btn-con-reserva {
+    background: #d1fae5;
+    color: #10b981;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: default;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+}
+
+/* Sin faltantes */
+.sin-faltantes {
+    background: white;
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    grid-column: 1 / -1;
+}
+
+.sin-faltantes i {
+    font-size: 4rem;
+    color: #48BB78;
+    margin-bottom: 1rem;
+}
+
+.sin-faltantes p {
+    margin: 0;
+    color: #2D3748;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+/* Footer con estadísticas */
+.detalle-footer {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.footer-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #F7FAFC;
+}
+
+.footer-label {
+    color: #718096;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.footer-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2D3748;
+}
+
+.footer-value.success {
+    color: #48BB78;
+}
+
+.footer-value.danger {
+    color: #FF6B6B;
+}
+
+.footer-value.info {
+    color: #4299E1;
+}
+
+/* Loading y Error */
+.loading-box,
+.error-box {
+    background: white;
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    max-width: 500px;
+    margin: 5rem auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loading-box i {
+    font-size: 3rem;
+    color: #A0522D;
+    margin-bottom: 1rem;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-box p,
+.error-box p {
+    margin: 0;
+    color: #2D3748;
+    font-size: 1.1rem;
+}
+
+.error-box i {
+    font-size: 3rem;
+    color: #FF6B6B;
+    margin-bottom: 1rem;
+}
+
+.error-box .btn-volver {
+    margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .personas-lista {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .detalle-container {
+        padding: 1rem;
+    }
+
+    .detalle-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .badge-faltantes {
+        text-align: center;
+    }
+
+    .personas-lista {
+        grid-template-columns: 1fr;
+    }
+}
+    
+
+    .detalle-footer {
+        grid-template-columns: repeat(2, 1fr);
+    }
