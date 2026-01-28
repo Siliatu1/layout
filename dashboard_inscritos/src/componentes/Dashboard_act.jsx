@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./Dashboard_act.css";
 import DetallePersonas from "./DetallePersonas";
+import Asistencia from "./Asistencia";
 
 const Dashboard_act = () => {
     const [datosIntegrados, setDatosIntegrados] = useState([]);
@@ -11,6 +12,7 @@ const Dashboard_act = () => {
     const [filtroSeleccionado, setFiltroSeleccionado] = useState('todos');
     const [searchTerm, setSearchTerm] = useState('');
     const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState(null);
+    const [mostrarAsistencia, setMostrarAsistencia] = useState(false);
     const [paginaActual, setPaginaActual] = useState(1);
     const tarjetasPorPagina = 8;
 
@@ -219,9 +221,32 @@ const Dashboard_act = () => {
         );
     }
 
+    if (mostrarAsistencia) {
+        return (
+            <div className="asistencia-wrapper">
+                <button 
+                    className="btn-volver-dashboard" 
+                    onClick={() => setMostrarAsistencia(false)}
+                >
+                    <i className="bi bi-arrow-left"></i> Volver al Dashboard
+                </button>
+                <Asistencia />
+            </div>
+        );
+    }
+
     return (
         <div className="dashboard-container">
-            <h1 className="dashboard-title">Dashboard</h1>
+            <div className="dashboard-header">
+                <h1 className="dashboard-title">Dashboard</h1>
+                <button 
+                    className="btn-confirmar-asistencia"
+                    onClick={() => setMostrarAsistencia(true)}
+                >
+                    <i className="bi bi-calendar-check"></i>
+                    Confirmar Asistencia
+                </button>
+            </div>
             
             {/* Sección de Totales */}
             <div className="totals-section">

@@ -5,12 +5,91 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Header con título y botón */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
 .dashboard-title {
-    text-align: center;
+        
     color: #5D4E37;
     font-size: 2rem;
-    margin-bottom: 2rem;
+    margin: 0;
     font-weight: 600;
+}
+
+/* Botón Confirmar Asistencia */
+.btn-confirmar-asistencia {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #8B7355 0%, #6B5D4F 100%);
+    color: #FFF8DC;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.3);
+}
+
+.btn-confirmar-asistencia:hover {
+    background: linear-gradient(135deg, #6B5D4F 0%, #5D4E37 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 115, 85, 0.4);
+}
+
+.btn-confirmar-asistencia:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(139, 115, 85, 0.3);
+}
+
+.btn-confirmar-asistencia i {
+    font-size: 18px;
+}
+
+/* Botón Volver al Dashboard */
+.btn-volver-dashboard {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    margin: 20px;
+    background: linear-gradient(135deg, #8B7355 0%, #6B5D4F 100%);
+    color: #FFF8DC;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(139, 115, 85, 0.3);
+}
+
+.btn-volver-dashboard:hover {
+    background: linear-gradient(135deg, #6B5D4F 0%, #5D4E37 100%);
+    transform: translateX(-3px);
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.4);
+}
+
+.btn-volver-dashboard i {
+    font-size: 16px;
+}
+
+/* Contenedor del componente Asistencia */
+.asistencia-wrapper {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 
