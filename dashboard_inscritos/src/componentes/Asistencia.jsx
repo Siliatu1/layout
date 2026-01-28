@@ -11,7 +11,7 @@ const Asistencia = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [Fecha, setFecha] = useState("");
-    const [c, setFechasDisponibles] = useState([]);
+    const [fechasDisponibles, setFechasDisponibles] = useState([]);
     const [loadingFechas, setLoadingFechas] = useState(true);
     const [searchDocumento, setSearchDocumento] = useState("");
     const [fechaSeleccionada, setFechaSeleccionada] = useState("");
