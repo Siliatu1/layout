@@ -78,7 +78,7 @@ const Dashboard_act = () => {
             ]);
             
             todasLasClaves.forEach(clave => {
-                // Filtrar claves vacías o con solo espacios
+                
                 if (!clave || clave.trim() === '' || clave === 'Sin área' || clave === 'Sin departamento') {
                     return;
                 }
@@ -87,10 +87,13 @@ const Dashboard_act = () => {
                 const total_person = empleadosPorDepartamento[clave] || 0;
                 const total_asistentes = asistentesPorArea[clave] || 0;
                 
-                // Calcula participación
+                
                 const participacion = total_person > 0 ? (total_res / total_person) : 0;
                 
-                // Calcula faltantes
+                
+                const porcentaje_asistencia = total_res > 0 ? ((total_asistentes / total_res) * 100).toFixed(2) : 0;
+                
+                
                 const faltantes = Math.max(0, total_person - total_res);
                 
                 datosIntegrados.push({
@@ -100,6 +103,7 @@ const Dashboard_act = () => {
                     total_asistentes: total_asistentes,
                     participacion: participacion,
                     porcentaje_participacion: (participacion * 100).toFixed(2),
+                    porcentaje_asistencia: porcentaje_asistencia,
                     faltantes: faltantes
                 });
             });
@@ -121,14 +125,14 @@ const Dashboard_act = () => {
     useEffect(() => {
         let datosFiltrados = [...datosIntegrados];
 
-        // Filtrar por categoría
+    
         if (filtroSeleccionado === 'alta') {
-            datosFiltrados = datosFiltrados.filter(item => item.porcentaje_participacion >= 50);
+            datosFiltrados = datosFiltrados.filter(item => item.porcentaje_asistencia >= 50);
         } else if (filtroSeleccionado === 'baja') {
-            datosFiltrados = datosFiltrados.filter(item => item.porcentaje_participacion < 50);
+            datosFiltrados = datosFiltrados.filter(item => item.porcentaje_asistencia < 50);
         }
 
-        // Filtrar por búsqueda
+    
         if (searchTerm) {
             datosFiltrados = datosFiltrados.filter(item => 
                 item.department.toLowerCase().includes(searchTerm.toLowerCase())
@@ -200,15 +204,17 @@ const Dashboard_act = () => {
         return <div className="error">{error}</div>;
     }
 
-   
+    
     const totalReservas = datosIntegrados.reduce((sum, item) => sum + item.total_res, 0);
+    const totalAsistentes = datosIntegrados.reduce((sum, item) => sum + item.total_asistentes, 0);
     const totalEmpleados = datosIntegrados.reduce((sum, item) => sum + item.total_person, 0);
-    const promedioParticipacion = totalEmpleados > 0 
-        ? ((totalReservas / totalEmpleados) * 100).toFixed(2)
+    const porcentajeAsistencia = totalReservas > 0 
+        ? ((totalAsistentes / totalReservas) * 100).toFixed(2)
         : 0;
 
-    // filtrados
+    
     const totalReservasFiltradas = datosFiltrados.reduce((sum, item) => sum + item.total_res, 0);
+    const totalAsistentesFiltrados = datosFiltrados.reduce((sum, item) => sum + item.total_asistentes, 0);
     const totalEmpleadosFiltrados = datosFiltrados.reduce((sum, item) => sum + item.total_person, 0);
 
     
@@ -255,12 +261,12 @@ const Dashboard_act = () => {
                     <p className="total-value primary">{totalReservas}</p>
                 </div>
                 <div className="total-card">
-                    <p className="total-label">Total Empleados</p>
-                    <p className="total-value">{totalEmpleados}</p>
+                    <p className="total-label">Total Asistentes</p>
+                    <p className="total-value success">{totalAsistentes}</p>
                 </div>
                 <div className="total-card">
-                    <p className="total-label">Promedio Participación</p>
-                    <p className="total-value success">{promedioParticipacion}%</p>
+                    <p className="total-label">Porcentaje Asistencia</p>
+                    <p className="total-value success">{porcentajeAsistencia}%</p>
                 </div>
             </div>
 
@@ -292,8 +298,8 @@ const Dashboard_act = () => {
                             className="filter-select"
                         >
                             <option value="todos">Todos los departamentos ({datosIntegrados.length})</option>
-                            <option value="alta">Participación Alta (≥50%)</option>
-                            <option value="baja">Participación Baja (&lt;50%)</option>
+                            <option value="alta">Asistencia Alta (≥50%)</option>
+                            <option value="baja">Asistencia Baja (&lt;50%)</option>
                         </select>
                     </div>
                 </div>
@@ -309,13 +315,13 @@ const Dashboard_act = () => {
                         className={`filter-btn ${filtroSeleccionado === 'alta' ? 'active' : ''}`}
                         onClick={() => setFiltroSeleccionado('alta')}
                     >
-                        <i className="bi bi-graph-up-arrow"></i> Participación Alta
+                        <i className="bi bi-graph-up-arrow"></i> Asistencia Alta
                     </button>
                     <button 
                         className={`filter-btn ${filtroSeleccionado === 'baja' ? 'active' : ''}`}
                         onClick={() => setFiltroSeleccionado('baja')}
                     >
-                        <i className="bi bi-graph-down-arrow"></i> Participación Baja
+                        <i className="bi bi-graph-down-arrow"></i> Asistencia Baja
                     </button>
                 </div>
 
@@ -324,7 +330,7 @@ const Dashboard_act = () => {
                         Mostrando {datosFiltrados.length} de {datosIntegrados.length} departamentos
                     </span>
                     <span className="filter-stats">
-                        Reservas: {totalReservasFiltradas} | Empleados: {totalEmpleadosFiltrados}
+                        Reservas: {totalReservasFiltradas} | Asistentes: {totalAsistentesFiltrados}
                     </span>
                 </div>
             </div>
@@ -343,7 +349,7 @@ const Dashboard_act = () => {
                         >
                             <div className="card-header">
                                 <i className={`bi ${getIconForDepartment(item.department)} card-icon`}></i>
-                                <i className={`bi ${item.porcentaje_participacion >= 50 ? 'bi-graph-up-arrow' : 'bi-graph-down-arrow'} card-trend ${item.porcentaje_participacion >= 50 ? 'trend-up' : 'trend-down'}`}></i>
+                                <i className={`bi ${item.porcentaje_asistencia >= 50 ? 'bi-graph-up-arrow' : 'bi-graph-down-arrow'} card-trend ${item.porcentaje_asistencia >= 50 ? 'trend-up' : 'trend-down'}`}></i>
                             </div>
                             
                             <div className="card-percentage">
@@ -360,7 +366,7 @@ const Dashboard_act = () => {
                                         cy="70"
                                         r="60"
                                         strokeDasharray={`${2 * Math.PI * 60}`}
-                                        strokeDashoffset={`${2 * Math.PI * 60 * (1 - item.porcentaje_participacion / 100)}`}
+                                        strokeDashoffset={`${2 * Math.PI * 60 * (1 - item.porcentaje_asistencia / 100)}`}
                                     />
                                     <text
                                         x="70"
@@ -369,7 +375,7 @@ const Dashboard_act = () => {
                                         textAnchor="middle"
                                         dominantBaseline="middle"
                                     >
-                                        {item.porcentaje_participacion}%
+                                        {item.porcentaje_asistencia}%
                                     </text>
                                 </svg>
                             </div>
@@ -378,11 +384,11 @@ const Dashboard_act = () => {
                             
                             <div className="card-stats">
                                 <p className="stats-numbers">
-                                    <span className="stats-reservas">{item.total_res}</span>
+                                    <span className="stats-reservas">{item.total_asistentes}</span>
                                     <span className="stats-separator"> / </span>
-                                    <span className="stats-empleados">{item.total_person}</span>
+                                    <span className="stats-empleados">{item.total_res}</span>
                                 </p>
-                                <p className="stats-label">Reservas / Empleados</p>
+                                <p className="stats-label">Asistentes / Reservas</p>
                             </div>
                             
                             <div className="card-details">
@@ -400,13 +406,13 @@ const Dashboard_act = () => {
                                     <span className="detail-value" style={{color: '#f59e0b', fontWeight: '700'}}>{item.total_asistentes}</span>
                                 </div>
                                 <div className="detail-item warning">
-                                    <span className="detail-label">Faltantes:</span>
+                                    <span className="detail-label">Faltantes Reservas:</span>
                                     <span className="detail-value faltantes-clickable">
                                         {item.faltantes} →
                                     </span>
                                 </div>
                                 <div className="detail-item highlight">
-                                    <span className="detail-label">Participación:</span>
+                                    <span className="detail-label">Porcentaje inscripción:</span>
                                     <span className="detail-value">
                                         {item.porcentaje_participacion}%
                                     </span>
