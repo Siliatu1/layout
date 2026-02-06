@@ -25,11 +25,11 @@ const Asistencia = () => {
                     'https://macfer.crepesywaffles.com/api/sintonizarte-V2s'
                 );
                 
-                console.log("Respuesta de fechas:", response.data);
+              
                 setFechasDisponibles(response.data.data || []);
                 setLoadingFechas(false);
             } catch (err) {
-                console.error("Error al cargar fechas:", err);
+                
                 setError(err.message);
                 setLoadingFechas(false);
             }
@@ -50,12 +50,12 @@ const Asistencia = () => {
                     `https://macfer.crepesywaffles.com/api/sintonizarte-v2-reservas?populate=*&filters[sintonizarte_v_2_][id]=${Fecha}&pagination[pageSize]=200`
                 );
 
-                console.log("Respuesta de reservas:", response.data);
+                
 
                 setAsistenciaData(response.data.data || []);
                 setLoading(false);
             } catch (err) {
-                console.error("Error al cargar reservas:", err);
+               
                 setError(err.message);
                 setLoading(false);
             }
@@ -107,7 +107,7 @@ const Asistencia = () => {
             
             setLoadingToggle(false);
         } catch (err) {
-            console.error("Error al actualizar asistencia:", err);
+          
             setLoadingToggle(false);
             alert("Error al actualizar la asistencia");
         }
@@ -120,7 +120,7 @@ const Asistencia = () => {
             'Documento': reserva.attributes?.documento || "N/A",
             'Nombre': reserva.attributes?.nombreUsuario || "N/A",
             'Fecha': fechaSeleccionada || reserva.attributes?.fecha || "N/A",
-            'Estado': reserva.attributes?.confirm ? "Asistió" : "No asistió"
+            'Estado': reserva.attributes?.confirm == true ? "Paloma" : reserva.attributes?.confirm == false ?"Pato" : "Pollo"
         }));
 
         const ws = XLSX.utils.json_to_sheet(dataToExport);
@@ -210,6 +210,8 @@ const Asistencia = () => {
                 </select>
             </div>
 
+         
+
             {Fecha && (
                 <>
                     <div className="filter-export-container">
@@ -264,6 +266,9 @@ const Asistencia = () => {
                     )}
                 </>
             )}
+            {
+                
+            }
 
             {!Fecha && !loading && (
                 <div className="mensaje-sin-datos">

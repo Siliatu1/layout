@@ -25,33 +25,50 @@ const DetallePersonas = ({ departamento, onVolver }) => {
             setLoading(true);
             
             // Obtener reservas
+
             const reservasResponse = await fetch('https://macfer.crepesywaffles.com/api/Sintonizarte-v2-reservas');
-            const reservasData = await reservasResponse.json();
+
+            
+            const reservasText = await reservasResponse.text();
+
+            
+            let reservasData;
+            try {
+                reservasData = JSON.parse(reservasText);
+            } catch (e) {
+
+                throw new Error('La API de reservas no devolvió JSON válido');
+            }
             
             // Obtener empleados del departamento 
-            const empleadosResponse = await fetch('https://apialohav2.crepesywaffles.com/intellinextAct');
-            const empleadosData = await empleadosResponse.json();
+
+            const empleadosResponse = await fetch('https://apialohav2.crepesywaffles.com/buk/empleados3');
+
+            
+            const empleadosText = await empleadosResponse.text();
+
+            
+            let empleadosData;
+            try {
+                empleadosData = JSON.parse(empleadosText);
+            } catch (e) {
+
+                throw new Error('La API de empleados no devolvió JSON válido');
+            }
             
             const reservasArray = reservasData.data || [];
-            const empleadosArray = Array.isArray(empleadosData) ? empleadosData : [];
+            const empleadosArray = empleadosData.data || [];
             
-            console.log('Total empleados:', empleadosArray.length);
-            console.log('Total reservas:', reservasArray.length);
-            console.log('Departamento buscado:', departamento);
-            console.log('Muestra empleado:', empleadosArray[0]);
-            console.log('Muestra reserva:', reservasArray[0]);
+
             
             
             const reservasPorDocumento = new Map();
-            
-            
-            reservasArray
-                .filter(reserva => reserva.attributes?.pdv_area === departamento)
+                reservasArray
                 .forEach(reserva => {
                     const documento = reserva.attributes?.documento?.toString().trim();
                     const confirm = reserva.attributes?.confirm;
                     
-                    if (documento) {
+                    if  (documento) {
                         reservasPorDocumento.set(documento, confirm);
                     }
                 });
@@ -60,21 +77,20 @@ const DetallePersonas = ({ departamento, onVolver }) => {
             const asistentesConfirmados = Array.from(reservasPorDocumento.values())
                 .filter(confirm => confirm !== null).length;
             
-            console.log('Total reservas del departamento:', reservasPorDocumento.size);
-            console.log('Asistentes confirmados:', asistentesConfirmados);
+
             
 
            
-            const empleadosDepartamento = empleadosArray.filter(emp => emp.departament === departamento);
+            const empleadosDepartamento = empleadosArray.filter(emp => emp.departamento === departamento);
             
             // Separar inscritos y no inscritos
             const faltantes = [];
             const inscritos = [];
             
             empleadosDepartamento.forEach(empleado => {
-                const documento = empleado.documento?.toString().trim();
+                const documento = empleado.document_number?.toString().trim();
                 
-                if (reservasPorDocumento.has(documento)) {
+                if (documento && reservasPorDocumento.has(documento)) {
                     inscritos.push({
                         ...empleado,
                         confirm: reservasPorDocumento.get(documento)
@@ -89,11 +105,7 @@ const DetallePersonas = ({ departamento, onVolver }) => {
                 ? ((conReserva / empleadosDepartamento.length) * 100).toFixed(2)
                 : 0;
             
-            console.log('Empleados departamento:', empleadosDepartamento.length);
-            console.log('Faltantes encontrados:', faltantes.length);
-            console.log('Inscritos encontrados:', inscritos.length);
-            console.log('Con reserva:', conReserva);
-            
+
             setPersonasFaltantes(faltantes);
             setPersonasInscritas(inscritos);
             setTotales({
@@ -106,7 +118,7 @@ const DetallePersonas = ({ departamento, onVolver }) => {
             
             setLoading(false);
         } catch (err) {
-            console.error('Error cargando datos:', err);
+
             setError('Error al cargar los datos: ' + err.message);
             setLoading(false);
         }
@@ -183,15 +195,15 @@ const DetallePersonas = ({ departamento, onVolver }) => {
                             <div className="persona-info">
                                 <div className="detalle-row">
                                     <span className="detalle-label">Cédula:</span>
-                                    <span className="detalle-texto">{persona.documento}</span>
+                                    <span className="detalle-texto">{persona.document_number}</span>
                                 </div>
                                 <div className="detalle-row">
                                     <span className="detalle-label">Cargo:</span>
-                                    <span className="detalle-texto">{persona.position}</span>
+                                    <span className="detalle-texto">{persona.cargo}</span>
                                 </div>
                                 <div className="detalle-row">
                                     <span className="detalle-label">Área:</span>
-                                    <span className="detalle-texto">{persona.departament}</span>
+                                    <span className="detalle-texto">{persona.departamento}</span>
                                 </div>
                                 {vistaActual === 'inscritos' && (
                                     <div className="detalle-row">

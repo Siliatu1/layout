@@ -2,7 +2,7 @@
 .selector-evento-container {
     margin: 30px 0 20px 0;
     padding: 20px;
-    background: linear-gradient(135deg, #A0826D 0%, #8B7355 100%);
+    background: linear-gradient(135deg, #A0522D 0%, #A0826D 100%);
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -30,20 +30,20 @@
 }
 
 .selector-evento:hover {
-    border-color: #C19A6B;
+    border-color: #A0522D#C19A6B;
     background-color: #F5DEB3;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .selector-evento:focus {
     outline: none;
-    border-color: #8B6914;
+    border-color: #A0522D#8B6914;
     box-shadow: 0 0 0 3px rgba(139, 105, 20, 0.15);
 }
 
 .selector-evento option {
     padding: 10px;
-    background-color: #FAEBD7;
+    background-color: #fffefd;
     color: #5D4037;
 }
 
@@ -51,7 +51,7 @@
 .selector-fecha-container {
     margin: 0 0 30px 0;
     padding: 20px;
-    background: linear-gradient(135deg, #c5ad76 0%, #d5d2b1 100%);
+    background: linear-gradient(135deg, #a0512d7d 0%, #ae8470ed 100%);
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     max-width: 100%;
@@ -69,10 +69,10 @@
 .selector-fecha {
     width: 100%;
     padding: 14px 18px;
-    border: 2px solid #837540;
+    border: 2px solid #A0522D;
     border-radius: 10px;
     font-size: 15px;
-    background-color: #c4ad6e;
+    background-color: #ae8470;
     color: #151515;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -80,21 +80,21 @@
 }
 
 .selector-fecha:hover {
-    border-color: #c4b78a;
-    background-color: #dfd9b4;
+    border-color: #A0522D;
+    background-color: #A0522D;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .selector-fecha:focus {
     outline: none;
-    border-color: #8f7748;
+    border-color: #A0522D;
     box-shadow: 0 0 0 3px rgba(85, 107, 47, 0.15);
 }
 
 .selector-fecha option {
     padding: 10px;
-    background-color: #dcd3b6;
-    color: #786a40;
+    background-color: #A0522D;
+    color: #ffffff;
 }
 
 

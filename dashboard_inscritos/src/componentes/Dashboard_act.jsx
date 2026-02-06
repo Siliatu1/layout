@@ -24,80 +24,117 @@ const Dashboard_act = () => {
         try {
             setLoading(true);
             
-            // A: Fetch reservas data (Macfer API)
+            // Fetch reservas data (Macfer API)
+          
             const reservasResponse = await fetch('https://macfer.crepesywaffles.com/api/Sintonizarte-v2-reservas');
-            const reservasData = await reservasResponse.json();
+           
             
-            // B: Fetch empleados data (Aloha API)
-            const empleadosResponse = await fetch('https://apialohav2.crepesywaffles.com/intellinexTot');
-            const empleadosData = await empleadosResponse.json();
+            const reservasText = await reservasResponse.text();
+           
             
-            
-            
-            const reservasArray = Array.isArray(reservasData) ? reservasData : 
-                                   reservasData.data ? reservasData.data : [];
-            
-            
-            const reservasPorArea = {};
-            const asistentesPorArea = {};
-            reservasArray.forEach(reserva => {
-                const area = reserva.attributes.pdv_area || 'Sin área';
-                reservasPorArea[area] = (reservasPorArea[area] || 0) + 1;
-                const confirmado = reserva.attributes?.confirm;
-                if (confirmado !== null) {
-                    asistentesPorArea[area] = (asistentesPorArea[area] || 0) + 1;
-                }
-            });
-            
-            
-            
-            
-            const empleadosArray = Array.isArray(empleadosData) ? empleadosData : 
-                                    empleadosData.data ? empleadosData.data : [];
-            
-            const empleadosPorDepartamento = {};
-            empleadosArray.forEach(empleado => {
-                const department = empleado.department || empleado.departamento || 'Sin departamento';
-                const totalPerson = parseInt(empleado.total_person) || 1;
+            let reservasData;
+            try {
+                reservasData = JSON.parse(reservasText);
+            } catch (e) {
                 
-                if (!empleadosPorDepartamento[department]) {
-                    empleadosPorDepartamento[department] = 0;
+                throw new Error('La API de reservas no devolvió JSON válido');
+            }
+            
+            // Fetch empleados data (Aloha API)
+           
+            const empleadosResponse = await fetch('https://apialohav2.crepesywaffles.com/buk/empleados3');
+            
+            
+            const empleadosText = await empleadosResponse.text();
+          
+            
+            let empleadosData;
+            try {
+                empleadosData = JSON.parse(empleadosText);
+            } catch (e) {
+            
+                throw new Error('La API de empleados no devolvió JSON válido');
+            }
+            
+            const reservasArray = reservasData.data || [];
+            const empleadosArray = empleadosData.data || [];
+            
+
+            
+            // Crear mapa de reservas por documento
+            const reservasPorDocumento = new Map();
+            reservasArray.forEach(reserva => {
+                const documento = reserva.attributes?.documento?.toString().trim();
+                const confirm = reserva.attributes?.confirm;
+                
+                if (documento) {
+                    reservasPorDocumento.set(documento, {
+                        tieneReserva: true,
+                        confirm: confirm
+                    });
                 }
-                empleadosPorDepartamento[department] += totalPerson;
             });
             
+
             
+            // Agrupar empleados por departamento y contar reservas/asistentes
+            const datosPorDepartamento = {};
             
+            empleadosArray.forEach(empleado => {
+                const department = empleado.departamento || 'Sin departamento';
+                const documento = empleado.document_number?.toString().trim();
+                
+                // Inicializar departamento si no existe
+                if (!datosPorDepartamento[department]) {
+                    datosPorDepartamento[department] = {
+                        total_person: 0,
+                        total_res: 0,
+                        total_asistentes: 0
+                    };
+                }
+                
+                // Contar empleado
+                datosPorDepartamento[department].total_person += 1;
+                
+                // Verificar si tiene reserva
+                if (documento && reservasPorDocumento.has(documento)) {
+                    const reservaInfo = reservasPorDocumento.get(documento);
+                    datosPorDepartamento[department].total_res += 1;
+                    
+                    // Contar asistentes (confirm !== null)
+                    if (reservaInfo.confirm == true) {
+                        datosPorDepartamento[department].total_asistentes += 1;
+                    }
+                }
+            });
             
+
+            
+            // Crear array de datos integrados
             const datosIntegrados = [];
             
-            
-            const todasLasClaves = new Set([
-                ...Object.keys(reservasPorArea),
-                ...Object.keys(empleadosPorDepartamento)
-            ]);
-            
-            todasLasClaves.forEach(clave => {
-                
-                if (!clave || clave.trim() === '' || clave === 'Sin área' || clave === 'Sin departamento') {
+            Object.keys(datosPorDepartamento).forEach(department => {
+                // Filtrar entradas vacías o inválidas
+                if (!department || department.trim() === '' || department === 'Sin departamento') {
                     return;
                 }
                 
-                const total_res = reservasPorArea[clave] || 0;
-                const total_person = empleadosPorDepartamento[clave] || 0;
-                const total_asistentes = asistentesPorArea[clave] || 0;
+                const datos = datosPorDepartamento[department];
+                const total_person = datos.total_person;
+                const total_res = datos.total_res;
+                const total_asistentes = datos.total_asistentes;
                 
-                
+                // Calcular participación (reservas / empleados)
                 const participacion = total_person > 0 ? (total_res / total_person) : 0;
                 
-                
+                // Calcular porcentaje de asistencia (asistentes / reservas)
                 const porcentaje_asistencia = total_res > 0 ? ((total_asistentes / total_res) * 100).toFixed(2) : 0;
                 
-                
+                // Calcular faltantes
                 const faltantes = Math.max(0, total_person - total_res);
                 
                 datosIntegrados.push({
-                    department: clave,
+                    department: department,
                     total_person: total_person,
                     total_res: total_res,
                     total_asistentes: total_asistentes,
@@ -108,14 +145,16 @@ const Dashboard_act = () => {
                 });
             });
             
-            
+            // Ordenar alfabéticamente por departamento
             datosIntegrados.sort((a, b) => a.department.localeCompare(b.department));
+            
+
             
             setDatosIntegrados(datosIntegrados);
             setDatosFiltrados(datosIntegrados);
             setLoading(false);
         } catch (err) {
-            console.error('Error fetching data:', err);
+
             setError('Error al cargar los datos: ' + err.message);
             setLoading(false);
         }
@@ -125,14 +164,14 @@ const Dashboard_act = () => {
     useEffect(() => {
         let datosFiltrados = [...datosIntegrados];
 
-    
+        // Filtro de asistencia
         if (filtroSeleccionado === 'alta') {
             datosFiltrados = datosFiltrados.filter(item => item.porcentaje_asistencia >= 50);
         } else if (filtroSeleccionado === 'baja') {
             datosFiltrados = datosFiltrados.filter(item => item.porcentaje_asistencia < 50);
         }
 
-    
+        // Filtro de búsqueda por nombre de departamento
         if (searchTerm) {
             datosFiltrados = datosFiltrados.filter(item => 
                 item.department.toLowerCase().includes(searchTerm.toLowerCase())
@@ -205,6 +244,7 @@ const Dashboard_act = () => {
     }
 
     
+    // Calcular totales generales
     const totalReservas = datosIntegrados.reduce((sum, item) => sum + item.total_res, 0);
     const totalAsistentes = datosIntegrados.reduce((sum, item) => sum + item.total_asistentes, 0);
     const totalEmpleados = datosIntegrados.reduce((sum, item) => sum + item.total_person, 0);
@@ -212,7 +252,7 @@ const Dashboard_act = () => {
         ? ((totalAsistentes / totalReservas) * 100).toFixed(2)
         : 0;
 
-    
+    // Calcular totales filtrados
     const totalReservasFiltradas = datosFiltrados.reduce((sum, item) => sum + item.total_res, 0);
     const totalAsistentesFiltrados = datosFiltrados.reduce((sum, item) => sum + item.total_asistentes, 0);
     const totalEmpleadosFiltrados = datosFiltrados.reduce((sum, item) => sum + item.total_person, 0);
