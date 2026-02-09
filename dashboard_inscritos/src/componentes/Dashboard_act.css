@@ -636,13 +636,21 @@
     font-weight: 600;
 }
 
+/* ===================== RESPONSIVE DESIGN ===================== */
+
+/* Pantallas grandes (hasta 1400px) */
 @media (max-width: 1400px) {
     .cards-container {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
+/* Tablets y pantallas medianas (hasta 1024px) */
 @media (max-width: 1024px) {
+    .dashboard-container {
+        padding: 1.5rem;
+    }
+
     .cards-container {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -671,16 +679,58 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 0.75rem;
     }
+
+    .btn-confirmar-asistencia {
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+
+    .btn-volver-dashboard {
+        padding: 10px 20px;
+        font-size: 14px;
+        margin: 15px;
+    }
+
+    .pagination-container {
+        padding: 1rem;
+        gap: 0.4rem;
+    }
+
+    .pagination-btn,
+    .pagination-number {
+        width: 36px;
+        height: 36px;
+        font-size: 0.95rem;
+    }
 }
 
+/* Tablets pequeñas y móviles grandes (hasta 768px) */
 @media (max-width: 768px) {
     .dashboard-container {
         padding: 1rem;
     }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
     
     .dashboard-title {
         font-size: 1.5rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0;
+        text-align: center;
+    }
+
+    .btn-confirmar-asistencia {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-volver-dashboard {
+        width: auto;
+        margin: 15px auto;
+        display: flex;
     }
     
     .totals-section {
@@ -782,11 +832,79 @@
     .percentage-text {
         font-size: 1.5rem;
     }
+
+    .card-details {
+        padding-top: 0.75rem;
+    }
+
+    .detail-item {
+        font-size: 0.9rem;
+        padding: 0.4rem 0;
+    }
+
+    .circular-progress-container svg {
+        width: 120px;
+        height: 120px;
+    }
+
+    .circular-progress-text {
+        font-size: 1.3rem;
+    }
+
+    .pagination-container {
+        flex-wrap: wrap;
+        padding: 1rem;
+        gap: 0.4rem;
+    }
+
+    .pagination-btn,
+    .pagination-number {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+
+    .pagination-info {
+        width: 100%;
+        text-align: center;
+        margin-left: 0;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .refresh-button {
+        width: 100%;
+        max-width: 300px;
+    }
 }
 
+/* Móviles (hasta 480px) */
 @media (max-width: 480px) {
+    .dashboard-container {
+        padding: 0.75rem;
+    }
+
     .dashboard-title {
         font-size: 1.25rem;
+    }
+
+    .btn-confirmar-asistencia {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .btn-confirmar-asistencia i {
+        font-size: 16px;
+    }
+
+    .btn-volver-dashboard {
+        padding: 8px 16px;
+        font-size: 13px;
+        margin: 10px auto;
+    }
+
+    .total-card {
+        padding: 1.25rem;
     }
 
     .total-value {
@@ -795,6 +913,10 @@
 
     .total-label {
         font-size: 0.85rem;
+    }
+
+    .filters-section {
+        padding: 0.75rem;
     }
 
     .search-input {
@@ -812,14 +934,120 @@
         padding: 0.65rem 0.75rem;
     }
 
-    .refresh-button {
-        font-size: 1rem;
-        padding: 0.875rem 1.5rem;
+    .department-card {
+        padding: 1.25rem;
+    }
+
+    .card-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.75rem;
+    }
+
+    .card-title {
+        font-size: 0.95rem;
+    }
+
+    .stats-numbers {
+        font-size: 1.5rem;
     }
 
     .card-percentage svg {
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
+    }
+
+    .percentage-text {
+        font-size: 1.3rem;
+    }
+
+    .detail-item {
+        font-size: 0.85rem;
+    }
+
+    .refresh-button {
+        font-size: 0.95rem;
+        padding: 0.75rem 1.25rem;
+    }
+
+    .refresh-button i {
+        font-size: 1rem;
+    }
+
+    .pagination-btn,
+    .pagination-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+    }
+
+    .pagination-info {
+        font-size: 0.8rem;
+    }
+}
+
+/* Móviles muy pequeños (hasta 360px) */
+@media (max-width: 360px) {
+    .dashboard-container {
+        padding: 0.5rem;
+    }
+
+    .dashboard-title {
+        font-size: 1.1rem;
+    }
+
+    .btn-confirmar-asistencia {
+        padding: 8px 16px;
+        font-size: 13px;
+        gap: 6px;
+    }
+
+    .total-value {
+        font-size: 1.75rem;
+    }
+
+    .total-label {
+        font-size: 0.75rem;
+    }
+
+    .search-input,
+    .filter-select {
+        font-size: 0.85rem;
+        padding: 0.65rem 2rem 0.65rem 2.5rem;
+    }
+
+    .filter-btn {
+        font-size: 0.8rem;
+        padding: 0.6rem 0.65rem;
+    }
+
+    .card-percentage svg {
+        width: 90px;
+        height: 90px;
+    }
+
+    .percentage-text {
+        font-size: 1.2rem;
+    }
+
+    .stats-numbers {
+        font-size: 1.3rem;
+    }
+
+    .refresh-button {
+        font-size: 0.9rem;
+        padding: 0.65rem 1rem;
+    }
+
+    .pagination-container {
+        gap: 0.3rem;
+    }
+
+    .pagination-btn,
+    .pagination-number {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
     }
 }
 

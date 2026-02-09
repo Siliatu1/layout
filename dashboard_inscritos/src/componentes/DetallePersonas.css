@@ -375,13 +375,63 @@
     margin-top: 1.5rem;
 }
 
-/* Responsive */
+/* ===================== RESPONSIVE DESIGN ===================== */
+
+/* Pantallas grandes (hasta 1200px) */
 @media (max-width: 1200px) {
     .personas-lista {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .detalle-footer {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
+/* Tablets y pantallas medianas (hasta 1024px) */
+@media (max-width: 1024px) {
+    .detalle-container {
+        padding: 1rem 1.25rem;
+    }
+
+    .personas-lista {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.875rem;
+    }
+
+    .persona-card {
+        padding: 1.25rem;
+    }
+
+    .persona-nombre {
+        font-size: 1.15rem;
+    }
+
+    .detalle-row {
+        font-size: 0.9rem;
+    }
+
+    .detalle-footer {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+
+    .footer-value {
+        font-size: 1.75rem;
+    }
+
+    .btn-filtro {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.95rem;
+    }
+
+    .btn-volver {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* Tablets pequeñas y móviles grandes (hasta 768px) */
 @media (max-width: 768px) {
     .detalle-container {
         padding: 1rem;
@@ -393,16 +443,330 @@
         align-items: stretch;
     }
 
+    .filtros-botones {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-filtro {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .btn-volver {
+        width: 100%;
+        justify-content: center;
+    }
+
     .badge-faltantes {
         text-align: center;
     }
 
+    .detalle-title-section {
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .detalle-title {
+        font-size: 1.25rem;
+    }
+
+    .detalle-title i {
+        font-size: 1.5rem;
+    }
+
     .personas-lista {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
-}
-    
+
+    .persona-card {
+        padding: 1.25rem;
+    }
+
+    .persona-nombre {
+        font-size: 1.1rem;
+    }
+
+    .detalle-row {
+        font-size: 0.9rem;
+    }
+
+    .detalle-label {
+        min-width: 85px;
+    }
+
+    .badge-confirmada,
+    .badge-sin-reserva,
+    .badge-asistio,
+    .badge-no-asistio,
+    .badge-pendiente {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.8rem;
+    }
 
     .detalle-footer {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 1.25rem;
     }
+
+    .footer-stat {
+        padding: 0.875rem;
+    }
+
+    .footer-label {
+        font-size: 0.8rem;
+    }
+
+    .footer-value {
+        font-size: 1.75rem;
+    }
+
+    .loading-box,
+    .error-box {
+        padding: 2.5rem;
+        margin: 4rem 1rem;
+    }
+
+    .loading-box i,
+    .error-box i {
+        font-size: 2.5rem;
+    }
+
+    .loading-box p,
+    .error-box p {
+        font-size: 1rem;
+    }
+}
+
+/* Móviles (hasta 480px) */
+@media (max-width: 480px) {
+    .detalle-container {
+        padding: 0.75rem;
+    }
+
+    .detalle-title-section {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .detalle-title {
+        font-size: 1.1rem;
+        gap: 0.5rem;
+    }
+
+    .detalle-title i {
+        font-size: 1.3rem;
+    }
+
+    .btn-filtro {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.875rem;
+        gap: 0.4rem;
+    }
+
+    .btn-filtro i {
+        font-size: 0.95rem;
+    }
+
+    .btn-volver {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.875rem;
+        gap: 0.4rem;
+    }
+
+    .badge-faltantes {
+        padding: 0.4rem 1.25rem;
+        font-size: 0.85rem;
+    }
+
+    .personas-lista {
+        gap: 0.875rem;
+    }
+
+    .persona-card {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .persona-nombre {
+        font-size: 1rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .persona-detalles {
+        gap: 0.4rem;
+    }
+
+    .detalle-row {
+        font-size: 0.85rem;
+        gap: 0.4rem;
+    }
+
+    .detalle-label {
+        min-width: 80px;
+        font-size: 0.85rem;
+    }
+
+    .detalle-texto {
+        font-size: 0.85rem;
+    }
+
+    .badge-confirmada,
+    .badge-sin-reserva,
+    .badge-asistio,
+    .badge-no-asistio,
+    .badge-pendiente {
+        padding: 0.25rem 0.7rem;
+        font-size: 0.75rem;
+    }
+
+    .btn-sin-reserva,
+    .btn-con-reserva {
+        padding: 0.4rem 1.25rem;
+        font-size: 0.85rem;
+    }
+
+    .detalle-footer {
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
+        padding: 1rem;
+    }
+
+    .footer-stat {
+        padding: 0.75rem;
+    }
+
+    .footer-label {
+        font-size: 0.75rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .footer-value {
+        font-size: 1.5rem;
+    }
+
+    .sin-faltantes {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .sin-faltantes i {
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .sin-faltantes p {
+        font-size: 1rem;
+    }
+
+    .loading-box,
+    .error-box {
+        padding: 2rem 1.5rem;
+        margin: 3rem 0.75rem;
+        max-width: 90%;
+    }
+
+    .loading-box i,
+    .error-box i {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .loading-box p,
+    .error-box p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Móviles muy pequeños (hasta 360px) */
+@media (max-width: 360px) {
+    .detalle-container {
+        padding: 0.5rem;
+    }
+
+    .detalle-title-section {
+        padding: 0.875rem;
+    }
+
+    .detalle-title {
+        font-size: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .detalle-title i {
+        font-size: 1.2rem;
+    }
+
+    .btn-filtro,
+    .btn-volver {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+        gap: 0.35rem;
+    }
+
+    .btn-filtro i {
+        font-size: 0.9rem;
+    }
+
+    .badge-faltantes {
+        padding: 0.35rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .persona-card {
+        padding: 0.875rem;
+    }
+
+    .persona-nombre {
+        font-size: 0.95rem;
+    }
+
+    .detalle-row {
+        font-size: 0.8rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.2rem;
+    }
+
+    .detalle-label {
+        min-width: auto;
+        font-size: 0.8rem;
+    }
+
+    .detalle-texto {
+        font-size: 0.8rem;
+    }
+
+    .badge-confirmada,
+    .badge-sin-reserva,
+    .badge-asistio,
+    .badge-no-asistio,
+    .badge-pendiente {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.7rem;
+    }
+
+    .footer-value {
+        font-size: 1.3rem;
+    }
+
+    .footer-label {
+        font-size: 0.7rem;
+    }
+
+    .sin-faltantes {
+        padding: 2rem 1rem;
+    }
+
+    .sin-faltantes i {
+        font-size: 2.5rem;
+    }
+
+    .sin-faltantes p {
+        font-size: 0.95rem;
+    }
+}
