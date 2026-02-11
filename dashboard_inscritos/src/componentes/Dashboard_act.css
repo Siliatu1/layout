@@ -83,6 +83,105 @@
     font-size: 16px;
 }
 
+/* Header Actions */
+.header-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Menu Dropdown */
+.menu-dropdown {
+    position: relative;
+}
+
+.btn-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #8B7355 0%, #6B5D4F 100%);
+    color: #FFF8DC;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.3);
+}
+
+.btn-menu:hover {
+    background: linear-gradient(135deg, #6B5D4F 0%, #5D4E37 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 115, 85, 0.4);
+}
+
+.btn-menu:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(139, 115, 85, 0.3);
+}
+
+.btn-menu i {
+    font-size: 20px;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    min-width: 250px;
+    z-index: 1000;
+    overflow: hidden;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: white;
+    border: none;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 15px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background: linear-gradient(90deg, #f9fafb 0%, #f3f4f6 100%);
+    color: #8B7355;
+    padding-left: 24px;
+}
+
+.dropdown-item i {
+    font-size: 18px;
+    color: #8B7355;
+}
+
 /* Contenedor del componente Asistencia */
 .asistencia-wrapper {
     width: 100%;

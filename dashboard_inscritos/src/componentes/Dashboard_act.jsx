@@ -3,6 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./Dashboard_act.css";
 import DetallePersonas from "./DetallePersonas";
 import Asistencia from "./Asistencia";
+import AsistenciaLideres from "./AsistenciaLideres";
 
 const Dashboard_act = () => {
     const [datosIntegrados, setDatosIntegrados] = useState([]);
@@ -13,6 +14,8 @@ const Dashboard_act = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState(null);
     const [mostrarAsistencia, setMostrarAsistencia] = useState(false);
+    const [mostrarAsistenciaLideres, setMostrarAsistenciaLideres] = useState(false);
+    const [menuAbierto, setMenuAbierto] = useState(false);
     const [paginaActual, setPaginaActual] = useState(1);
     const tarjetasPorPagina = 8;
 
@@ -281,17 +284,53 @@ const Dashboard_act = () => {
         );
     }
 
+    if (mostrarAsistenciaLideres) {
+        return (
+            <AsistenciaLideres 
+                onVolver={() => setMostrarAsistenciaLideres(false)}
+            />
+        );
+    }
+
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
-                <h1 className="dashboard-title">Dashboard</h1>
-                <button 
-                    className="btn-confirmar-asistencia"
-                    onClick={() => setMostrarAsistencia(true)}
-                >
-                    <i className="bi bi-calendar-check"></i>
-                    Confirmar Asistencia
-                </button>
+                <h1 className="dashboard-title">HOLA, INGRESASTE AL SISTEMA DE GESTION DE RESERVAS</h1>
+                <div className="header-actions">
+                    <div className="menu-dropdown">
+                        <button 
+                            className="btn-menu"
+                            onClick={() => setMenuAbierto(!menuAbierto)}
+                        >
+                            <i className="bi bi-list"></i>
+                            Menú
+                        </button>
+                        {menuAbierto && (
+                            <div className="dropdown-content">
+                                <button 
+                                    className="dropdown-item"
+                                    onClick={() => {
+                                        setMostrarAsistenciaLideres(true);
+                                        setMenuAbierto(false);
+                                    }}
+                                >
+                                    <i className="bi bi-people-fill"></i>
+                                    Asistencia Líderes
+                                </button>
+                                <button 
+                                    className="dropdown-item"
+                                    onClick={() => {
+                                        setMostrarAsistencia(true);
+                                        setMenuAbierto(false);
+                                    }}
+                                >
+                                    <i className="bi bi-calendar-check"></i>
+                                    Confirmar Asistencia
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
             
             {/* Sección de Totales */}
