@@ -24,7 +24,7 @@ const DetallePersonas = ({ departamento, onVolver }) => {
         try {
             setLoading(true);
             
-            // Obtener reservas
+
 
             const reservasResponse = await fetch('https://macfer.crepesywaffles.com/api/Sintonizarte-v2-reservas');
 
@@ -40,7 +40,7 @@ const DetallePersonas = ({ departamento, onVolver }) => {
                 throw new Error('La API de reservas no devolvió JSON válido');
             }
             
-            // Obtener empleados del departamento 
+
 
             const empleadosResponse = await fetch('https://apialohav2.crepesywaffles.com/buk/empleados3');
 
@@ -72,8 +72,7 @@ const DetallePersonas = ({ departamento, onVolver }) => {
                         reservasPorDocumento.set(documento, confirm);
                     }
                 });
-            
-            // asistencia
+
             const asistentesConfirmados = Array.from(reservasPorDocumento.values())
                 .filter(confirm => confirm !== null).length;
             
@@ -83,7 +82,7 @@ const DetallePersonas = ({ departamento, onVolver }) => {
            
             const empleadosDepartamento = empleadosArray.filter(emp => emp.departamento === departamento);
             
-            // Separar inscritos y no inscritos
+
             const faltantes = [];
             const inscritos = [];
             

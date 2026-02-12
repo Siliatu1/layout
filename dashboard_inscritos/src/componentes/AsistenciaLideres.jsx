@@ -8,8 +8,9 @@ const AsistenciaLideres = ({ onVolver }) => {
     const [filtroAsistencia, setFiltroAsistencia] = useState('todos');
     const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState('');
     const [departamentosUnicos, setDepartamentosUnicos] = useState([]);
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [itemsPorPagina, setItemsPorPagina] = useState(10);
 
-    // cargos puntos de venta
     const cargosPermitidos = [
         'COORDINADORA HELADERIA',
         'COORDINADOR DE ZONA',
@@ -25,7 +26,7 @@ const AsistenciaLideres = ({ onVolver }) => {
     }, []);
 
 
-    // Asistencias de lideres 
+
     const fetchAsistenciaLideres = async () => {
         try {
             setLoading(true);
@@ -114,7 +115,6 @@ const AsistenciaLideres = ({ onVolver }) => {
     };
 
 
-     // Configurar contenido CSV
     const exportarAExcel = () => {
         const lideresFiltrados = filtrarLideresAsistencia();
         
@@ -339,7 +339,9 @@ const AsistenciaLideres = ({ onVolver }) => {
                     </thead>
                     <tbody>
                         {lideresFiltrados.length > 0 ? (
-                            lideresFiltrados.map((lider, index) => (
+                            lideresFiltrados
+                                .slice((paginaActual - 1) * itemsPorPagina, paginaActual * itemsPorPagina)
+                                .map((lider, index) => (
                                 <tr key={index} className="fila-lider">
                                     <td>
                                         <div className="foto-container">
@@ -385,9 +387,67 @@ const AsistenciaLideres = ({ onVolver }) => {
                 </table>
             </div>
 
+            {/* Información de resultados y paginación */}
             <div className="info-resultados">
-                Mostrando {lideresFiltrados.length} de {totalLideres} coordinadores
+                Mostrando {Math.min((paginaActual - 1) * itemsPorPagina + 1, lideresFiltrados.length)} - {Math.min(paginaActual * itemsPorPagina, lideresFiltrados.length)} de {lideresFiltrados.length} coordinadores
             </div>
+
+            {lideresFiltrados.length > 0 && (
+                <div className="pagination-container">
+                    <div className="pagination-info">
+                        <label htmlFor="items-per-page">Mostrar: </label>
+                        <select
+                            id="items-per-page"
+                            value={itemsPorPagina}
+                            onChange={(e) => {
+                                setItemsPorPagina(Number(e.target.value));
+                                setPaginaActual(1);
+                            }}
+                            className="pagination-select"
+                        >
+                            <option value={10}>10</option>
+                            <option value={20}>20</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                        </select>
+                        <span> por página</span>
+                    </div>
+
+                    <div className="pagination-controls">
+                        <button
+                            className="pagination-btn"
+                            onClick={() => setPaginaActual(1)}
+                            disabled={paginaActual === 1}
+                        >
+                            <i className="bi bi-chevron-double-left"></i>
+                        </button>
+                        <button
+                            className="pagination-btn"
+                            onClick={() => setPaginaActual(prev => Math.max(1, prev - 1))}
+                            disabled={paginaActual === 1}
+                        >
+                            <i className="bi bi-chevron-left"></i>
+                        </button>
+                        <span className="pagination-current">
+                            Página {paginaActual} de {Math.ceil(lideresFiltrados.length / itemsPorPagina)}
+                        </span>
+                        <button
+                            className="pagination-btn"
+                            onClick={() => setPaginaActual(prev => Math.min(Math.ceil(lideresFiltrados.length / itemsPorPagina), prev + 1))}
+                            disabled={paginaActual === Math.ceil(lideresFiltrados.length / itemsPorPagina)}
+                        >
+                            <i className="bi bi-chevron-right"></i>
+                        </button>
+                        <button
+                            className="pagination-btn"
+                            onClick={() => setPaginaActual(Math.ceil(lideresFiltrados.length / itemsPorPagina))}
+                            disabled={paginaActual === Math.ceil(lideresFiltrados.length / itemsPorPagina)}
+                        >
+                            <i className="bi bi-chevron-double-right"></i>
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

@@ -27,6 +27,7 @@ body {
   width: 100%;
   min-width: 320px;
   min-height: 100vh;
+  background: linear-gradient(135deg, #f8f4f0 0%, #e8dfd5 100%);
 }
 
 #root {

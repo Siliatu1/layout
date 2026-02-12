@@ -2,7 +2,7 @@
 .gestion-lider-container {
     padding: 20px;
     min-height: 100vh;
-    background: white;
+    background: linear-gradient(135deg, #f6f2ec 0%, #ebe3d8 100%);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 

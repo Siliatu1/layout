@@ -7,4 +7,5 @@
 .App {
   width: 100%;
   min-height: 100vh;
+  background: linear-gradient(135deg, #f8f4f0 0%, #e8dfd5 100%);
 }

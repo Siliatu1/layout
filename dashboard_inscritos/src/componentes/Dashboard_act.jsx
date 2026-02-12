@@ -27,7 +27,7 @@ const Dashboard_act = () => {
         try {
             setLoading(true);
             
-            // Fetch reservas data (Macfer API)
+
           
             const reservasResponse = await fetch('https://macfer.crepesywaffles.com/api/Sintonizarte-v2-reservas');
            
@@ -43,7 +43,7 @@ const Dashboard_act = () => {
                 throw new Error('La API de reservas no devolvió JSON válido');
             }
             
-            // Fetch empleados data (Aloha API)
+
            
             const empleadosResponse = await fetch('https://apialohav2.crepesywaffles.com/buk/empleados3');
             
@@ -64,7 +64,7 @@ const Dashboard_act = () => {
             
 
             
-            // Crear mapa de reservas por documento
+
             const reservasPorDocumento = new Map();
             reservasArray.forEach(reserva => {
                 const documento = reserva.attributes?.documento?.toString().trim();
@@ -80,14 +80,14 @@ const Dashboard_act = () => {
             
 
             
-            // Agrupar empleados por departamento y contar reservas/asistentes
+
             const datosPorDepartamento = {};
             
             empleadosArray.forEach(empleado => {
                 const department = empleado.departamento || 'Sin departamento';
                 const documento = empleado.document_number?.toString().trim();
                 
-                // Inicializar departamento si no existe
+
                 if (!datosPorDepartamento[department]) {
                     datosPorDepartamento[department] = {
                         total_person: 0,
@@ -96,15 +96,15 @@ const Dashboard_act = () => {
                     };
                 }
                 
-                // Contar empleado
+
                 datosPorDepartamento[department].total_person += 1;
                 
-                // Verificar si tiene reserva
+
                 if (documento && reservasPorDocumento.has(documento)) {
                     const reservaInfo = reservasPorDocumento.get(documento);
                     datosPorDepartamento[department].total_res += 1;
                     
-                    // Contar asistentes (confirm !== null)
+                    
                     if (reservaInfo.confirm == true) {
                         datosPorDepartamento[department].total_asistentes += 1;
                     }
@@ -113,11 +113,11 @@ const Dashboard_act = () => {
             
 
             
-            // Crear array de datos integrados
+
             const datosIntegrados = [];
             
             Object.keys(datosPorDepartamento).forEach(department => {
-                // Filtrar entradas vacías o inválidas
+
                 if (!department || department.trim() === '' || department === 'Sin departamento') {
                     return;
                 }
@@ -127,13 +127,12 @@ const Dashboard_act = () => {
                 const total_res = datos.total_res;
                 const total_asistentes = datos.total_asistentes;
                 
-                // Calcular participación (reservas / empleados)
+
                 const participacion = total_person > 0 ? (total_res / total_person) : 0;
-                
-                // Calcular porcentaje de asistencia (asistentes / reservas)
+  
                 const porcentaje_asistencia = total_res > 0 ? ((total_asistentes / total_res) * 100).toFixed(2) : 0;
                 
-                // Calcular faltantes
+
                 const faltantes = Math.max(0, total_person - total_res);
                 
                 datosIntegrados.push({
@@ -148,7 +147,7 @@ const Dashboard_act = () => {
                 });
             });
             
-            // Ordenar alfabéticamente por departamento
+
             datosIntegrados.sort((a, b) => a.department.localeCompare(b.department));
             
 
@@ -167,14 +166,14 @@ const Dashboard_act = () => {
     useEffect(() => {
         let datosFiltrados = [...datosIntegrados];
 
-        // Filtro de asistencia
+
         if (filtroSeleccionado === 'alta') {
             datosFiltrados = datosFiltrados.filter(item => item.porcentaje_asistencia >= 50);
         } else if (filtroSeleccionado === 'baja') {
             datosFiltrados = datosFiltrados.filter(item => item.porcentaje_asistencia < 50);
         }
 
-        // Filtro de búsqueda por nombre de departamento
+
         if (searchTerm) {
             datosFiltrados = datosFiltrados.filter(item => 
                 item.department.toLowerCase().includes(searchTerm.toLowerCase())
@@ -247,7 +246,7 @@ const Dashboard_act = () => {
     }
 
     
-    // Calcular totales generales
+
     const totalReservas = datosIntegrados.reduce((sum, item) => sum + item.total_res, 0);
     const totalAsistentes = datosIntegrados.reduce((sum, item) => sum + item.total_asistentes, 0);
     const totalEmpleados = datosIntegrados.reduce((sum, item) => sum + item.total_person, 0);
@@ -255,7 +254,6 @@ const Dashboard_act = () => {
         ? ((totalAsistentes / totalReservas) * 100).toFixed(2)
         : 0;
 
-    // Calcular totales filtrados
     const totalReservasFiltradas = datosFiltrados.reduce((sum, item) => sum + item.total_res, 0);
     const totalAsistentesFiltrados = datosFiltrados.reduce((sum, item) => sum + item.total_asistentes, 0);
     const totalEmpleadosFiltrados = datosFiltrados.reduce((sum, item) => sum + item.total_person, 0);
@@ -273,12 +271,14 @@ const Dashboard_act = () => {
     if (mostrarAsistencia) {
         return (
             <div className="asistencia-wrapper">
-                <button 
-                    className="btn-volver-dashboard" 
-                    onClick={() => setMostrarAsistencia(false)}
-                >
-                    <i className="bi bi-arrow-left"></i> Volver al Dashboard
-                </button>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <button 
+                        className="btn-volver-dashboard" 
+                        onClick={() => setMostrarAsistencia(false)}
+                    >
+                        <i className="bi bi-arrow-left"></i> Volver al Dashboard
+                    </button>
+                </div>
                 <Asistencia />
             </div>
         );

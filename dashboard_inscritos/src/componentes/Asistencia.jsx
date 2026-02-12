@@ -16,6 +16,7 @@ const Asistencia = () => {
     const [searchDocumento, setSearchDocumento] = useState("");
     const [fechaSeleccionada, setFechaSeleccionada] = useState("");
     const [loadingToggle, setLoadingToggle] = useState(false);
+    const [empleadosMap, setEmpleadosMap] = useState(new Map());
 
     useEffect(() => {
         const fetchFechas = async () => {
@@ -35,6 +36,37 @@ const Asistencia = () => {
             }
         };
         fetchFechas();
+    }, []);
+
+    useEffect(() => {
+        const fetchEmpleados = async () => {
+            try {
+                const response = await axios.get(
+                    'https://apialohav2.crepesywaffles.com/buk/empleados3'
+                );
+                
+                const empleadosArray = response.data.data || [];
+                const empleadosMapTemp = new Map();
+                
+                empleadosArray.forEach(empleado => {
+                    const documento = empleado.document_number?.toString().trim();
+                    if (documento) {
+                        empleadosMapTemp.set(documento, {
+                            cargo: empleado.cargo || "N/A",
+                            area_nombre: empleado.area_nombre || "N/A",
+                            departamento: empleado.departamento || "N/A",
+                            direction: empleado.direction || "N/A",
+                            foto: empleado.foto || null
+                        });
+                    }
+                });
+                
+                setEmpleadosMap(empleadosMapTemp);
+            } catch (err) {
+                console.error("Error al cargar empleados:", err);
+            }
+        };
+        fetchEmpleados();
     }, []);
 
     useEffect(() => {
@@ -83,7 +115,8 @@ const Asistencia = () => {
             const nuevoEstado = !estadoActual;
             
             await axios.put(
-                `https://macfer.crepesywaffles.com/api/sintonizarte-v2-reservas/${reservaId}`,
+                `https://macfer.crepesywaffles.com/api/sintonizarte-v2-re
+                servas/${reservaId}`,
                 {
                     data: {
                         confirm: nuevoEstado
@@ -115,13 +148,20 @@ const Asistencia = () => {
 
 
     const exportToExcel = () => {
-        const dataToExport = filteredData.map((reserva, index) => ({
-            'ID': reserva.id,
-            'Documento': reserva.attributes?.documento || "N/A",
-            'Nombre': reserva.attributes?.nombreUsuario || "N/A",
-            'Fecha': fechaSeleccionada || reserva.attributes?.fecha || "N/A",
-            'Estado': reserva.attributes?.confirm == true ? "Paloma" : reserva.attributes?.confirm == false ?"Pato" : "Pollo"
-        }));
+        const dataToExport = filteredData.map((reserva, index) => {
+            const documento = reserva.attributes?.documento?.toString().trim();
+            const empleado = empleadosMap.get(documento) || {};
+            
+            return {
+                'Documento': reserva.attributes?.documento || "N/A",
+                'Nombre': reserva.attributes?.nombreUsuario || "N/A",
+                'Cargo': empleado.cargo || "N/A",
+                'Departamento': empleado.departamento || "N/A",
+                'Dirección': empleado.direction || "N/A",
+                'Fecha': fechaSeleccionada || reserva.attributes?.fecha || "N/A",
+                'Estado': reserva.attributes?.confirm == true ? "Asistió" : reserva.attributes?.confirm == false ? "No asistió" : "Pendiente"
+            };
+        });
 
         const ws = XLSX.utils.json_to_sheet(dataToExport);
         const wb = XLSX.utils.book_new();
@@ -141,10 +181,24 @@ const Asistencia = () => {
    
     const columns = [
         {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
-            width: 80,
+            title: 'Foto',
+            key: 'foto',
+            width: 90,
+            render: (_, record) => {
+                const documento = record.attributes?.documento?.toString().trim();
+                const empleado = empleadosMap.get(documento);
+                return (
+                    <div className="foto-container">
+                        {empleado?.foto ? (
+                            <img src={empleado.foto} alt="Foto empleado" className="foto-empleado-tabla" />
+                        ) : (
+                            <div className="foto-placeholder">
+                                <i className="bi bi-person-circle"></i>
+                            </div>
+                        )}
+                    </div>
+                );
+            },
         },
         {
             title: 'Documento',
@@ -157,6 +211,36 @@ const Asistencia = () => {
             dataIndex: ['attributes', 'nombreUsuario'],
             key: 'nombreUsuario',
             width: 250,
+        },
+        {
+            title: 'Cargo',
+            key: 'cargo',
+            width: 200,
+            render: (_, record) => {
+                const documento = record.attributes?.documento?.toString().trim();
+                const empleado = empleadosMap.get(documento);
+                return empleado?.cargo || "N/A";
+            },
+        },
+        {
+            title: 'Departamento',
+            key: 'departamento',
+            width: 200,
+            render: (_, record) => {
+                const documento = record.attributes?.documento?.toString().trim();
+                const empleado = empleadosMap.get(documento);
+                return empleado?.departamento || "N/A";
+            },
+        },
+        {
+            title: 'Dirección',
+            key: 'direction',
+            width: 220,
+            render: (_, record) => {
+                const documento = record.attributes?.documento?.toString().trim();
+                const empleado = empleadosMap.get(documento);
+                return empleado?.direction || "N/A";
+            },
         },
         {
             title: 'Fecha',
@@ -188,7 +272,7 @@ const Asistencia = () => {
 
     return (
         <div className="asistencia-container">
-            <h2 className="asistencia-titulo">Confirmación de Asistencia</h2>
+            <h2 className="asistencia-titulo">CONFIRMAR ASISTENCIA</h2>
 
             <div className="selector-fecha-container">
                 <label className="selector-fecha-label" htmlFor="fecha">
@@ -257,9 +341,11 @@ const Asistencia = () => {
                                         pageSize: 10,
                                         showSizeChanger: true,
                                         showTotal: (total) => `Total ${total} registros`,
-                                        pageSizeOptions: ['10', '20', '50', '100']
+                                        pageSizeOptions: ['10', '20', '50', '100'],
+                                        position: ['bottomCenter']
                                     }}
                                     className="tabla-asistencia-ant"
+                                    scroll={{ x: 'max-content' }}
                                 />
                             )}
                         </div>
