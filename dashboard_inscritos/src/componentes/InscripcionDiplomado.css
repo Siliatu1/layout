@@ -1,0 +1,297 @@
+.inscripcion-diplomado-container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #d7cfc6;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.inscripcion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    background: #d7cfc6;
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.btn-volver-inscripcion {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #634a3e 0%, #2e2422 100%);
+    color: #d7cfc6;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-family: 'Raleway', sans-serif;
+}
+
+.btn-volver-inscripcion:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 74, 62, 0.3);
+}
+
+.inscripcion-title {
+    font-size: 28px;
+    color: #634a3e;
+    font-weight: 300;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Raleway', sans-serif;
+}
+
+.btn-refresh-inscripcion {
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #634a3e 0%, #2e2422 100%);
+    color: #d7cfc6;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.btn-refresh-inscripcion:hover {
+    transform: rotate(180deg);
+    box-shadow: 0 4px 12px rgba(99, 74, 62, 0.3);
+}
+
+.tabla-container {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.foto-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.foto-empleado-tabla {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #8B7355;
+}
+
+.foto-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8B7355 0%, #6B5D4F 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.mensaje-sin-datos {
+    text-align: center;
+    padding: 50px;
+    color: #7f8c8d;
+    font-size: 16px;
+}
+
+.error-message {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.error-message i {
+    font-size: 48px;
+    color: #e74c3c;
+    margin-bottom: 15px;
+}
+
+.error-message p {
+    color: #e74c3c;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.btn-retry {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #8B7355 0%, #6B5D4F 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-retry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.3);
+}
+
+/* Estilos de la tabla Ant Design */
+.tabla-inscripcion-ant .ant-table {
+    font-size: 14px;
+}
+
+.tabla-inscripcion-ant .ant-table-thead > tr > th {
+    background: linear-gradient(135deg, #8B7355 0%, #6B5D4F 100%);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    padding: 16px 12px;
+    border: none;
+}
+
+.tabla-inscripcion-ant .ant-table-tbody > tr > td {
+    padding: 14px 12px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.tabla-inscripcion-ant .ant-table-tbody > tr:hover {
+    background: #f5f7fa;
+}
+
+.tabla-inscripcion-ant .ant-pagination {
+    margin-top: 20px;
+}
+
+.pagination-btn-custom {
+    min-width: 32px;
+    height: 32px;
+    border: 1px solid #d9d9d9;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.pagination-btn-custom:hover {
+    border-color: #8B7355;
+    color: #8B7355;
+}
+
+.pagination-btn-custom:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.btn-eliminar {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-eliminar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+}
+
+.btn-eliminar:active {
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .inscripcion-diplomado-container {
+        padding: 15px;
+    }
+
+    .inscripcion-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .inscripcion-title {
+        font-size: 22px;
+        text-align: center;
+    }
+
+    .btn-volver-inscripcion,
+    .btn-refresh-inscripcion {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .inscripcion-stats {
+        flex-direction: column;
+    }
+
+    .stat-card {
+        min-width: 100%;
+    }
+
+    .tabla-container {
+        padding: 15px;
+        overflow-x: auto;
+    }
+
+    .tabla-inscripcion-ant .ant-table-thead > tr > th,
+    .tabla-inscripcion-ant .ant-table-tbody > tr > td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .foto-empleado-tabla,
+    .foto-placeholder {
+        width: 40px;
+        height: 40px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inscripcion-title {
+        font-size: 18px;
+    }
+
+    .stat-card {
+        padding: 15px 20px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+}

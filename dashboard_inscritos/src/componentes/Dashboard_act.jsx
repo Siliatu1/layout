@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import LoadingSpinner from "./LoadingSpinner";
 import "./Dashboard_act.css";
 import DetallePersonas from "./DetallePersonas";
-import Asistencia from "./Asistencia";
-import AsistenciaLideres from "./AsistenciaLideres";
 
 const Dashboard_act = () => {
+    const navigate = useNavigate();
     const [datosIntegrados, setDatosIntegrados] = useState([]);
     const [datosFiltrados, setDatosFiltrados] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [filtroSeleccionado, setFiltroSeleccionado] = useState('todos');
     const [searchTerm, setSearchTerm] = useState('');
     const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState(null);
-    const [mostrarAsistencia, setMostrarAsistencia] = useState(false);
-    const [mostrarAsistenciaLideres, setMostrarAsistenciaLideres] = useState(false);
     const [menuAbierto, setMenuAbierto] = useState(false);
     const [paginaActual, setPaginaActual] = useState(1);
     const tarjetasPorPagina = 8;
@@ -27,43 +26,33 @@ const Dashboard_act = () => {
         try {
             setLoading(true);
             
+            // Timeout de 5 segundos máximo para el loading
+            const timeoutId = setTimeout(() => {
+                setLoading(false);
+            }, 5000);
 
-          
             const reservasResponse = await fetch('https://macfer.crepesywaffles.com/api/Sintonizarte-v2-reservas');
-           
-            
             const reservasText = await reservasResponse.text();
-           
-            
+
             let reservasData;
             try {
                 reservasData = JSON.parse(reservasText);
             } catch (e) {
-                
                 throw new Error('La API de reservas no devolvió JSON válido');
             }
-            
 
-           
             const empleadosResponse = await fetch('https://apialohav2.crepesywaffles.com/buk/empleados3');
-            
-            
             const empleadosText = await empleadosResponse.text();
-          
-            
+
             let empleadosData;
             try {
                 empleadosData = JSON.parse(empleadosText);
             } catch (e) {
-            
                 throw new Error('La API de empleados no devolvió JSON válido');
             }
-            
+
             const reservasArray = reservasData.data || [];
             const empleadosArray = empleadosData.data || [];
-            
-
-            
 
             const reservasPorDocumento = new Map();
             reservasArray.forEach(reserva => {
@@ -77,16 +66,13 @@ const Dashboard_act = () => {
                     });
                 }
             });
-            
 
-            
 
             const datosPorDepartamento = {};
             
             empleadosArray.forEach(empleado => {
                 const department = empleado.departamento || 'Sin departamento';
                 const documento = empleado.document_number?.toString().trim();
-                
 
                 if (!datosPorDepartamento[department]) {
                     datosPorDepartamento[department] = {
@@ -95,16 +81,13 @@ const Dashboard_act = () => {
                         total_asistentes: 0
                     };
                 }
-                
 
                 datosPorDepartamento[department].total_person += 1;
-                
 
                 if (documento && reservasPorDocumento.has(documento)) {
                     const reservaInfo = reservasPorDocumento.get(documento);
                     datosPorDepartamento[department].total_res += 1;
-                    
-                    
+
                     if (reservaInfo.confirm == true) {
                         datosPorDepartamento[department].total_asistentes += 1;
                     }
@@ -151,7 +134,7 @@ const Dashboard_act = () => {
             datosIntegrados.sort((a, b) => a.department.localeCompare(b.department));
             
 
-            
+            clearTimeout(timeoutId);
             setDatosIntegrados(datosIntegrados);
             setDatosFiltrados(datosIntegrados);
             setLoading(false);
@@ -238,14 +221,12 @@ const Dashboard_act = () => {
     };
 
     if (loading) {
-        return <div className="loading">Cargando datos...</div>;
+        return <LoadingSpinner message="Cargando datos del dashboard..." />;
     }
 
     if (error) {
         return <div className="error">{error}</div>;
     }
-
-    
 
     const totalReservas = datosIntegrados.reduce((sum, item) => sum + item.total_res, 0);
     const totalAsistentes = datosIntegrados.reduce((sum, item) => sum + item.total_asistentes, 0);
@@ -268,30 +249,6 @@ const Dashboard_act = () => {
         );
     }
 
-    if (mostrarAsistencia) {
-        return (
-            <div className="asistencia-wrapper">
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <button 
-                        className="btn-volver-dashboard" 
-                        onClick={() => setMostrarAsistencia(false)}
-                    >
-                        <i className="bi bi-arrow-left"></i> Volver al Dashboard
-                    </button>
-                </div>
-                <Asistencia />
-            </div>
-        );
-    }
-
-    if (mostrarAsistenciaLideres) {
-        return (
-            <AsistenciaLideres 
-                onVolver={() => setMostrarAsistenciaLideres(false)}
-            />
-        );
-    }
-
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
@@ -310,7 +267,7 @@ const Dashboard_act = () => {
                                 <button 
                                     className="dropdown-item"
                                     onClick={() => {
-                                        setMostrarAsistenciaLideres(true);
+                                        navigate('/asistencia-lideres');
                                         setMenuAbierto(false);
                                     }}
                                 >
@@ -320,12 +277,22 @@ const Dashboard_act = () => {
                                 <button 
                                     className="dropdown-item"
                                     onClick={() => {
-                                        setMostrarAsistencia(true);
+                                        navigate('/asistencia');
                                         setMenuAbierto(false);
                                     }}
                                 >
                                     <i className="bi bi-calendar-check"></i>
                                     Confirmar Asistencia
+                                </button>
+                                <button 
+                                    className="dropdown-item"
+                                    onClick={() => {
+                                        navigate('/inscripcion-diplomado');
+                                        setMenuAbierto(false);
+                                    }}
+                                >
+                                    <i className="bi bi-mortarboard-fill"></i>
+                                    Inscripción Diplomado
                                 </button>
                             </div>
                         )}
@@ -502,39 +469,58 @@ const Dashboard_act = () => {
                 </div>
 
                 {/* Paginación */}
-                {datosFiltrados.length > tarjetasPorPagina && (
-                    <div className="pagination-container">
-                        <button 
-                            className="pagination-btn"
-                            onClick={() => setPaginaActual(prev => Math.max(prev - 1, 1))}
-                            disabled={paginaActual === 1}
-                        >
-                            ←
-                        </button>
-                        
-                        {Array.from({ length: Math.ceil(datosFiltrados.length / tarjetasPorPagina) }, (_, i) => i + 1).map(numero => (
-                            <button
-                                key={numero}
-                                className={`pagination-number ${paginaActual === numero ? 'active' : ''}`}
-                                onClick={() => setPaginaActual(numero)}
+                {datosFiltrados.length > tarjetasPorPagina && (() => {
+                    const totalPaginas = Math.ceil(datosFiltrados.length / tarjetasPorPagina);
+                    const maxPaginasVisibles = 3;
+                    
+                    // Calcular rango de páginas a mostrar
+                    let paginaInicio = Math.max(1, paginaActual - Math.floor(maxPaginasVisibles / 2));
+                    let paginaFin = Math.min(totalPaginas, paginaInicio + maxPaginasVisibles - 1);
+                    
+                    // Ajustar si estamos cerca del final
+                    if (paginaFin - paginaInicio < maxPaginasVisibles - 1) {
+                        paginaInicio = Math.max(1, paginaFin - maxPaginasVisibles + 1);
+                    }
+                    
+                    const numeros = [];
+                    for (let i = paginaInicio; i <= paginaFin; i++) {
+                        numeros.push(i);
+                    }
+                    
+                    return (
+                        <div className="pagination-container">
+                            <button 
+                                className="pagination-btn"
+                                onClick={() => setPaginaActual(prev => Math.max(prev - 1, 1))}
+                                disabled={paginaActual === 1}
                             >
-                                {numero}
+                                ←
                             </button>
-                        ))}
-                        
-                        <button 
-                            className="pagination-btn"
-                            onClick={() => setPaginaActual(prev => Math.min(prev + 1, Math.ceil(datosFiltrados.length / tarjetasPorPagina)))}
-                            disabled={paginaActual === Math.ceil(datosFiltrados.length / tarjetasPorPagina)}
-                        >
-                            →
-                        </button>
-                        
-                        <span className="pagination-info">
-                            Mostrando {((paginaActual - 1) * tarjetasPorPagina) + 1} - {Math.min(paginaActual * tarjetasPorPagina, datosFiltrados.length)} de {datosFiltrados.length} elementos
-                        </span>
-                    </div>
-                )}
+                            
+                            {numeros.map(numero => (
+                                <button
+                                    key={numero}
+                                    className={`pagination-number ${paginaActual === numero ? 'active' : ''}`}
+                                    onClick={() => setPaginaActual(numero)}
+                                >
+                                    {numero}
+                                </button>
+                            ))}
+                            
+                            <button 
+                                className="pagination-btn"
+                                onClick={() => setPaginaActual(prev => Math.min(prev + 1, totalPaginas))}
+                                disabled={paginaActual === totalPaginas}
+                            >
+                                →
+                            </button>
+                            
+                            <span className="pagination-info">
+                                Mostrando {((paginaActual - 1) * tarjetasPorPagina) + 1} - {Math.min(paginaActual * tarjetasPorPagina, datosFiltrados.length)} de {datosFiltrados.length} elementos
+                            </span>
+                        </div>
+                    );
+                })()}
             </section>
 
             <button className="refresh-button" onClick={fetchData}>

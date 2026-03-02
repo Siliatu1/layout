@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "antd";
+import { DownloadOutlined } from "@ant-design/icons";
+import LoadingSpinner from "./LoadingSpinner";
 import "./AsistenciaLideres.css";
 
-const AsistenciaLideres = ({ onVolver }) => {
+const AsistenciaLideres = () => {
+    const navigate = useNavigate();
     const [lideresAsistencia, setLideresAsistencia] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [filtroAsistencia, setFiltroAsistencia] = useState('todos');
     const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState('');
     const [departamentosUnicos, setDepartamentosUnicos] = useState([]);
     const [paginaActual, setPaginaActual] = useState(1);
-    const [itemsPorPagina, setItemsPorPagina] = useState(10);
+    const itemsPorPagina = 10;
 
     const cargosPermitidos = [
         'COORDINADORA HELADERIA',
@@ -31,12 +36,15 @@ const AsistenciaLideres = ({ onVolver }) => {
         try {
             setLoading(true);
             
+            // Timeout de 5 segundos máximo para el loading
+            const timeoutId = setTimeout(() => {
+                setLoading(false);
+            }, 5000);
 
             const empleadosResponse = await fetch('https://apialohav2.crepesywaffles.com/buk/empleados3');
             const empleadosText = await empleadosResponse.text();
             let empleadosData = JSON.parse(empleadosText);
             const empleadosArray = empleadosData.data || [];
-            
 
             const lideresArray = empleadosArray.filter(empleado => {
                 const cargo = empleado.cargo?.toUpperCase().trim() || '';
@@ -44,13 +52,11 @@ const AsistenciaLideres = ({ onVolver }) => {
                     cargo.includes(cargoPermitido) || cargoPermitido.includes(cargo)
                 );
             });
-            
 
             const reservasResponse = await fetch('https://macfer.crepesywaffles.com/api/Sintonizarte-v2-reservas');
             const reservasText = await reservasResponse.text();
             let reservasData = JSON.parse(reservasText);
             const reservasArray = reservasData.data || [];
-            
 
             const reservasPorDocumento = new Map();
             reservasArray.forEach(reserva => {
@@ -79,14 +85,14 @@ const AsistenciaLideres = ({ onVolver }) => {
                     reservaId: reservaInfo?.id || null
                 };
             });
-            
-+
+
             lideresConAsistencia.sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
             const deptosUnicos = [...new Set(lideresConAsistencia
                 .map(lider => lider.departamento)
                 .filter(dept => dept && dept.trim() !== '')
             )].sort();
             
+            clearTimeout(timeoutId);
             setLideresAsistencia(lideresConAsistencia);
             setDepartamentosUnicos(deptosUnicos);
             setLoading(false);
@@ -165,16 +171,7 @@ const AsistenciaLideres = ({ onVolver }) => {
     };
 
     if (loading) {
-        return (
-            <div className="loading">
-                Cargando datos...
-                <span className="loading-dots">
-                    <span className="dot dot1">.</span>
-                    <span className="dot dot2">.</span>
-                    <span className="dot dot3">.</span>
-                </span>
-            </div>
-        );
+        return <LoadingSpinner message="Cargando asistencia de líderes..." />;
     }
 
     if (error) {
@@ -202,70 +199,25 @@ const AsistenciaLideres = ({ onVolver }) => {
     return (
         <div className="asistencia-lideres-container">
             <div className="asistencia-header">
-                <button className="btn-volver-asistencia" onClick={onVolver}>
+                <button className="btn-volver-asistencia" onClick={() => navigate(-1)}>
                     <i className="bi bi-arrow-left"></i> Volver
                 </button>
                 <h1 className="asistencia-title">
-                    <i className="bi bi-clipboard-check"></i> ASISTENCIA LIDERES
+                    ASISTENCIA LIDERES
                 </h1>
-                <div className="header-actions">
-                    <button className="btn-export-excel" onClick={exportarAExcel} title="Exportar a Excel">
-                        <i className="bi bi-file-earmark-excel"></i>
-                        
-                    </button>
-                    <button className="btn-refresh-asistencia" onClick={fetchAsistenciaLideres}>
-                        <i className="bi bi-arrow-clockwise"></i>
-                    </button>
-                </div>
-            </div>
-
-            {/* Estadísticas */}
-            <div className="estadisticas-asistencia">
-                <div className="stat-card-asistencia">
-                    <div className="stat-icon-asistencia total">
-                        <i className="bi bi-people-fill"></i>
-                    </div>
-                    <div className="stat-info-asistencia">
-                        <p className="stat-number-asistencia">{totalLideres}</p>
-                        <p className="stat-label-asistencia">Total lideres</p>
-                    </div>
-                </div>
-                <div className="stat-card-asistencia">
-                    <div className="stat-icon-asistencia asistieron">
-                        <i className="bi bi-check-circle-fill"></i>
-                    </div>
-                    <div className="stat-info-asistencia">
-                        <p className="stat-number-asistencia">{totalAsistieron}</p>
-                        <p className="stat-label-asistencia">Asistieron</p>
-                    </div>
-                </div>
-                <div className="stat-card-asistencia">
-                    <div className="stat-icon-asistencia no-asistieron">
-                        <i className="bi bi-x-circle-fill"></i>
-                    </div>
-                    <div className="stat-info-asistencia">
-                        <p className="stat-number-asistencia">{totalNoAsistieron}</p>
-                        <p className="stat-label-asistencia">No Asistieron</p>
-                    </div>
-                </div>
-                <div className="stat-card-asistencia">
-                    <div className="stat-icon-asistencia sin-reserva">
-                        <i className="bi bi-calendar-x"></i>
-                    </div>
-                    <div className="stat-info-asistencia">
-                        <p className="stat-number-asistencia">{totalSinReserva}</p>
-                        <p className="stat-label-asistencia">Sin Reserva</p>
-                    </div>
-                </div>
-                <div className="stat-card-asistencia porcentaje">
-                    <div className="stat-icon-asistencia porcentaje-icon">
-                        <i className="bi bi-graph-up"></i>
-                    </div>
-                    <div className="stat-info-asistencia">
-                        <p className="stat-number-asistencia">{porcentajeAsistencia}%</p>
-                        <p className="stat-label-asistencia">% Asistencia</p>
-                    </div>
-                </div>
+                
+                <Button
+                    type="primary"
+                    icon={<DownloadOutlined />}
+                    onClick={exportarAExcel}
+                    className="btn-export-excel"
+                    disabled={lideresFiltrados.length === 0}
+                >
+                    Exportar a Excel
+                </Button>
+                <button className="btn-refresh-asistencia" onClick={fetchAsistenciaLideres}>
+                    <i className="bi bi-arrow-clockwise"></i>
+                </button>
             </div>
 
             {/* Filtros y Búsqueda */}
@@ -387,67 +339,57 @@ const AsistenciaLideres = ({ onVolver }) => {
                 </table>
             </div>
 
-            {/* Información de resultados y paginación */}
-            <div className="info-resultados">
-                Mostrando {Math.min((paginaActual - 1) * itemsPorPagina + 1, lideresFiltrados.length)} - {Math.min(paginaActual * itemsPorPagina, lideresFiltrados.length)} de {lideresFiltrados.length} coordinadores
-            </div>
-
-            {lideresFiltrados.length > 0 && (
-                <div className="pagination-container">
-                    <div className="pagination-info">
-                        <label htmlFor="items-per-page">Mostrar: </label>
-                        <select
-                            id="items-per-page"
-                            value={itemsPorPagina}
-                            onChange={(e) => {
-                                setItemsPorPagina(Number(e.target.value));
-                                setPaginaActual(1);
-                            }}
-                            className="pagination-select"
-                        >
-                            <option value={10}>10</option>
-                            <option value={20}>20</option>
-                            <option value={50}>50</option>
-                            <option value={100}>100</option>
-                        </select>
-                        <span> por página</span>
-                    </div>
-
-                    <div className="pagination-controls">
-                        <button
+            {/* Paginación */}
+            {lideresFiltrados.length > itemsPorPagina && (() => {
+                const totalPaginas = Math.ceil(lideresFiltrados.length / itemsPorPagina);
+                const maxPaginasVisibles = 3;
+                
+                let paginaInicio = Math.max(1, paginaActual - Math.floor(maxPaginasVisibles / 2));
+                let paginaFin = Math.min(totalPaginas, paginaInicio + maxPaginasVisibles - 1);
+                
+                if (paginaFin - paginaInicio < maxPaginasVisibles - 1) {
+                    paginaInicio = Math.max(1, paginaFin - maxPaginasVisibles + 1);
+                }
+                
+                const numeros = [];
+                for (let i = paginaInicio; i <= paginaFin; i++) {
+                    numeros.push(i);
+                }
+                
+                return (
+                    <div className="pagination-container">
+                        <button 
                             className="pagination-btn"
-                            onClick={() => setPaginaActual(1)}
+                            onClick={() => setPaginaActual(prev => Math.max(prev - 1, 1))}
                             disabled={paginaActual === 1}
                         >
-                            <i className="bi bi-chevron-double-left"></i>
+                            ←
                         </button>
-                        <button
+                        
+                        {numeros.map(numero => (
+                            <button
+                                key={numero}
+                                className={`pagination-number ${paginaActual === numero ? 'active' : ''}`}
+                                onClick={() => setPaginaActual(numero)}
+                            >
+                                {numero}
+                            </button>
+                        ))}
+                        
+                        <button 
                             className="pagination-btn"
-                            onClick={() => setPaginaActual(prev => Math.max(1, prev - 1))}
-                            disabled={paginaActual === 1}
+                            onClick={() => setPaginaActual(prev => Math.min(prev + 1, totalPaginas))}
+                            disabled={paginaActual === totalPaginas}
                         >
-                            <i className="bi bi-chevron-left"></i>
+                            →
                         </button>
-                        <span className="pagination-current">
-                            Página {paginaActual} de {Math.ceil(lideresFiltrados.length / itemsPorPagina)}
+                        
+                        <span className="pagination-info">
+                            Mostrando {((paginaActual - 1) * itemsPorPagina) + 1} - {Math.min(paginaActual * itemsPorPagina, lideresFiltrados.length)} de {lideresFiltrados.length} elementos
                         </span>
-                        <button
-                            className="pagination-btn"
-                            onClick={() => setPaginaActual(prev => Math.min(Math.ceil(lideresFiltrados.length / itemsPorPagina), prev + 1))}
-                            disabled={paginaActual === Math.ceil(lideresFiltrados.length / itemsPorPagina)}
-                        >
-                            <i className="bi bi-chevron-right"></i>
-                        </button>
-                        <button
-                            className="pagination-btn"
-                            onClick={() => setPaginaActual(Math.ceil(lideresFiltrados.length / itemsPorPagina))}
-                            disabled={paginaActual === Math.ceil(lideresFiltrados.length / itemsPorPagina)}
-                        >
-                            <i className="bi bi-chevron-double-right"></i>
-                        </button>
                     </div>
-                </div>
-            )}
+                );
+            })()}
         </div>
     );
 };

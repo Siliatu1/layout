@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "./LoadingSpinner";
 import "./gestionlider.css";
 import AsistenciaLideres from "./AsistenciaLideres";
 
 const Gestionlider = ({ onVolver }) => {
+    const navigate = useNavigate();
+    
+    const handleVolver = () => {
+        if (onVolver) {
+            onVolver();
+        } else {
+            navigate(-1);
+        }
+    };
     const [lideres, setLideres] = useState({ administracion: [], puntoVenta: [] });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -121,11 +132,7 @@ const Gestionlider = ({ onVolver }) => {
     };
 
     if (loading) {
-        return (
-            <div className="gestion-lider-container">
-                
-            </div>
-        );
+        return <LoadingSpinner message="Cargando información de líderes..." />;
     }
 
     if (error) {
@@ -152,7 +159,7 @@ const Gestionlider = ({ onVolver }) => {
         return (
             <div className="gestion-lider-container">
                 <div className="gestion-header">
-                    <button className="btn-volver" onClick={onVolver}>
+                    <button className="btn-volver" onClick={handleVolver}>
                         <i className="bi bi-arrow-left"></i> Volver
                     </button>
                     <h1 className="gestion-title">
@@ -214,7 +221,7 @@ const Gestionlider = ({ onVolver }) => {
         );
     }
 
-
+ 
     const lideresFiltrados = filtrarLideres();
     const totalLideres = lideresFiltrados.length;
     const indiceInicio = (paginaActual - 1) * tarjetasPorPagina;
