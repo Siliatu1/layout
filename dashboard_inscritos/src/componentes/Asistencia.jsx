@@ -442,35 +442,7 @@ const Asistencia = () => {
                 return empleado?.direction || "N/A";
             },
         },
-        {
-            title: 'ACOMPAÑANTE',
-            key: 'acompanante',
-            width: 200,
-            render: (_, record) => (
-                <div 
-                    className={`toggle-container ${record.attributes?.llevaAcompanante ? 'active' : ''}`}
-                    onClick={() => handleAcompananteToggle(record.id, record.attributes?.llevaAcompanante)}
-                >
-                    <div className="toggle-switch">
-                        <div className="toggle-slider"></div>
-                    </div>
-                    <span className="toggle-label">
-                        {record.attributes?.llevaAcompanante ? (
-                            <span style={{ 
-                                background: '#D1FAE5', 
-                                color: '#065F46', 
-                                padding: '4px 10px', 
-                                borderRadius: '6px',
-                                fontSize: '12px',
-                                fontWeight: '600'
-                            }}>
-                                Sí
-                            </span>
-                        ) : 'No'}
-                    </span>
-                </div>
-            ),
-        },
+        
         {
             title: 'ESTADO',
             key: 'accion',
@@ -496,6 +468,37 @@ const Asistencia = () => {
                                 Asistió
                             </span>
                         ) : record.attributes?.confirm === false ? 'No asistió' : 'Pendiente'}
+                    </span>
+                </div>
+                
+            ),
+        },
+
+        {
+            title: 'ACOMPAÑANTE',
+            key: 'acompanante',
+            width: 200,
+            render: (_, record) => (
+                <div 
+                    className={`toggle-container ${record.attributes?.llevaAcompanante ? 'active' : ''}`}
+                    onClick={() => handleAcompananteToggle(record.id, record.attributes?.llevaAcompanante)}
+                >
+                    <div className="toggle-switch">
+                        <div className="toggle-slider"></div>
+                    </div>
+                    <span className="toggle-label">
+                        {record.attributes?.llevaAcompanante ? (
+                            <span style={{ 
+                                background: '#D1FAE5', 
+                                color: '#065F46', 
+                                padding: '4px 10px', 
+                                borderRadius: '6px',
+                                fontSize: '12px',
+                                fontWeight: '600'
+                            }}>
+                                Sí
+                            </span>
+                        ) : 'No'}
                     </span>
                 </div>
             ),
