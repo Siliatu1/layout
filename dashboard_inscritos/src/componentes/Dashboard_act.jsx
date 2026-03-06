@@ -16,6 +16,7 @@ const Dashboard_act = () => {
     const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState(null);
     const [menuAbierto, setMenuAbierto] = useState(false);
     const [paginaActual, setPaginaActual] = useState(1);
+    const [totalAcompanantes, setTotalAcompanantes] = useState(0);
     const tarjetasPorPagina = 8;
 
     useEffect(() => {
@@ -55,9 +56,17 @@ const Dashboard_act = () => {
             const empleadosArray = empleadosData.data || [];
 
             const reservasPorDocumento = new Map();
+            let contadorAcompanantes = 0;
+            
             reservasArray.forEach(reserva => {
                 const documento = reserva.attributes?.documento?.toString().trim();
                 const confirm = reserva.attributes?.confirm;
+                const llevaAcompanante = reserva.attributes?.llevaAcompanante;
+                
+                // Contar acompañantes
+                if (llevaAcompanante === true) {
+                    contadorAcompanantes++;
+                }
                 
                 if (documento) {
                     reservasPorDocumento.set(documento, {
@@ -66,6 +75,8 @@ const Dashboard_act = () => {
                     });
                 }
             });
+            
+            setTotalAcompanantes(contadorAcompanantes);
 
 
             const datosPorDepartamento = {};
@@ -307,12 +318,16 @@ const Dashboard_act = () => {
                     <p className="total-value primary">{totalReservas}</p>
                 </div>
                 <div className="total-card">
-                    <p className="total-label">Total Asistentes</p>
+                    <p className="total-label">Total Colaboradores</p>
                     <p className="total-value success">{totalAsistentes}</p>
                 </div>
                 <div className="total-card">
                     <p className="total-label">Porcentaje Asistencia</p>
                     <p className="total-value success">{porcentajeAsistencia}%</p>
+                </div>
+                 <div className="total-card">
+                    <p className="total-label">Total Acompañantes</p>
+                    <p className="total-value success">{totalAcompanantes}</p>
                 </div>
             </div>
 
@@ -448,7 +463,7 @@ const Dashboard_act = () => {
                                     <span className="detail-value">{item.total_res}</span>
                                 </div>
                                 <div className="detail-item" style={{background: '#fff7ed', borderRadius: '8px'}}>
-                                    <span className="detail-label">Total Asistentes:</span>
+                                    <span className="detail-label">Total Colaboradores:</span>
                                     <span className="detail-value" style={{color: '#f59e0b', fontWeight: '700'}}>{item.total_asistentes}</span>
                                 </div>
                                 <div className="detail-item warning">

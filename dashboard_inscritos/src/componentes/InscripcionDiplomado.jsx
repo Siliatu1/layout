@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, Button } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
+import * as XLSX from "xlsx";
 import LoadingSpinner from "./LoadingSpinner";
 import "./InscripcionDiplomado.css";
 
@@ -79,42 +80,45 @@ const InscripcionDiplomado = () => {
     };
 
     const exportarAExcel = () => {
-        const encabezados = ['Nombre', 'Documento', 'Cargo', 'Departamento', 'Correo', 'Celular', 'Diplomado'];
-        
-        const filas = inscripciones.map(inscripcion => {
+        // Preparar datos para exportar
+        const dataToExport = inscripciones.map(inscripcion => {
             const documento = inscripcion.attributes?.Documento?.toString().trim().replace(/,/g, '');
             const empleado = empleadosMap.get(documento);
             
-            return [
-                inscripcion.attributes?.Nombre || 'N/A',
-                inscripcion.attributes?.Documento || 'N/A',
-                inscripcion.attributes?.Cargo || 'N/A',
-                inscripcion.attributes?.Departamento || 'N/A',
-                inscripcion.attributes?.Correo || 'N/A',
-                empleado?.celular || 'N/A',
-                inscripcion.attributes?.sintonizarte_diplomado?.data?.attributes?.Nombre || 'N/A'
-            ];
+            return {
+                'Nombre': inscripcion.attributes?.Nombre || 'N/A',
+                'Documento': inscripcion.attributes?.Documento || 'N/A',
+                'Cargo': inscripcion.attributes?.Cargo || 'N/A',
+                'Departamento': inscripcion.attributes?.Departamento || 'N/A',
+                'Correo': inscripcion.attributes?.Correo || 'N/A',
+                'Celular': empleado?.celular || 'N/A',
+                'Diplomado': inscripcion.attributes?.sintonizarte_diplomado?.data?.attributes?.Nombre || 'N/A'
+            };
         });
+
+        // Crear hoja de Excel
+        const ws = XLSX.utils.json_to_sheet(dataToExport);
         
-        const csvContent = [
-            encabezados.join(','),
-            ...filas.map(fila => fila.map(celda => `"${celda}"`).join(','))
-        ].join('\n');
+        // Ajustar ancho de columnas automáticamente
+        const colWidths = [
+            { wch: 30 },  // Nombre
+            { wch: 15 },  // Documento
+            { wch: 35 },  // Cargo
+            { wch: 25 },  // Departamento
+            { wch: 30 },  // Correo
+            { wch: 15 },  // Celular
+            { wch: 30 }   // Diplomado
+        ];
+        ws['!cols'] = colWidths;
+
+        // Crear libro de Excel
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Inscripciones Diplomado");
         
-        const BOM = '\uFEFF';
-        const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
-        
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        
+        // Descargar archivo
         const fecha = new Date().toLocaleDateString('es-CO').replace(/\//g, '-');
-        link.setAttribute('download', `Inscripciones_Diplomado_${fecha}.csv`);
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        const fileName = `Inscripciones_Diplomado_${fecha}.xlsx`;
+        XLSX.writeFile(wb, fileName);
     };
 
     const pageSize = 8;
@@ -258,7 +262,7 @@ const InscripcionDiplomado = () => {
                     <i className="bi bi-arrow-left"></i> Volver
                 </button>
                 <h1 className="inscripcion-title">
-                    <i className="bi bi-mortarboard-fill"></i> INSCRIPCIONES DIPLOMADO
+                 INSCRIPCIONES DIPLOMADO
                 </h1>
                 <Button
                     type="primary"

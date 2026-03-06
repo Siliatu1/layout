@@ -148,7 +148,7 @@ const DetallePersonas = ({ departamento: departamentoProp, onVolver }) => {
     
     const pageSize = 8;
 
-    // paginacion
+   
     const itemRender = (current, type, originalElement) => {
         const totalPages = Math.ceil(personasAMostrar.length / pageSize);
         
@@ -159,25 +159,23 @@ const DetallePersonas = ({ departamento: departamentoProp, onVolver }) => {
             return <button className="pagination-btn-custom">→</button>;
         }
         if (type === 'page') {
-            // Calcular el grupo de 3 páginas actual
+
             const groupSize = 3;
             const currentGroup = Math.floor((currentPage - 1) / groupSize);
             const startPage = currentGroup * groupSize + 1;
             const endPage = Math.min(startPage + groupSize - 1, totalPages);
-            
-            // Solo mostrar las 3 páginas del grupo actual
             if (current >= startPage && current <= endPage) {
                 return originalElement;
             }
             return null;
         }
         if (type === 'jump-prev' || type === 'jump-next') {
-            return null; // Ocultar los botones de salto (...)
+            return null; 
         }
         return originalElement;
     };
     
-    // Definir columnas 
+
     const columnasInscritos = [
         {
             title: 'Foto',

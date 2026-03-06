@@ -204,10 +204,10 @@ const Asistencia = () => {
                     const partes = fechaStr.split("-");
                     if (partes.length === 3) {
                         if (partes[0].length === 4) {
-                            // YYYY-MM-DD
+  
                             mes = partes[1].padStart(2, '0');
                         } else {
-                            // DD-MM-YYYY
+              
                             mes = partes[1].padStart(2, '0');
                         }
                     }
@@ -582,6 +582,34 @@ const Asistencia = () => {
 
             {Fecha && (
                 <>
+                    {/* Card con totales */}
+                    <div className="totales-card">
+                        <div className="totales-fecha">
+                            <i className="bi bi-calendar-event"></i>
+                            <span>Fecha: {fechaSeleccionada}</span>
+                        </div>
+                        <div className="totales-stats">
+                            <div className="total-item">
+                               
+                                <div className="total-info">
+                                    <span className="total-label">Total Colaboradores</span>
+                                    <span className="total-valor">
+                                        {filteredData.filter(r => r.attributes?.confirm === true).length}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="total-item">
+                                
+                                <div className="total-info">
+                                    <span className="total-label">Total acompañantes</span>
+                                    <span className="total-valor">
+                                        {filteredData.filter(r => r.attributes?.llevaAcompanante === true && r.attributes?.confirm === true).length}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="filter-export-container">
                         <div className="filter-container">
                             <Input
@@ -616,6 +644,8 @@ const Asistencia = () => {
                                         : "No hay reservas para mostrar"}
                                 </p>
                             ) : (
+
+                                
                                 <Table
                                     columns={columns}
                                     dataSource={filteredData}

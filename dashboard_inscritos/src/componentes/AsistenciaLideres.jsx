@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
+import * as XLSX from "xlsx";
 import LoadingSpinner from "./LoadingSpinner";
 import "./AsistenciaLideres.css";
 
@@ -124,50 +125,45 @@ const AsistenciaLideres = () => {
     const exportarAExcel = () => {
         const lideresFiltrados = filtrarLideresAsistencia();
         
- 
-        const encabezados = ['Nombre', 'Cargo', 'Departamento', 'Documento', 'Email', 'Estado'];
-        
-
-        const filas = lideresFiltrados.map(lider => {
+        // Preparar datos para exportar
+        const dataToExport = lideresFiltrados.map(lider => {
             let estado = 'Sin Reserva';
             if (lider.tieneReserva) {
-                estado = lider.asistio ? 'Asisti\u00f3' : 'No Asisti\u00f3';
+                estado = lider.asistio ? 'Asistió' : 'No Asistió';
             }
             
-            return [
-                lider.nombre || 'Sin nombre',
-                lider.cargo || '-',
-                lider.departamento || 'Sin departamento',
-                lider.document_number || 'N/A',
-                lider.email || '-',
-                estado
-            ];
+            return {
+                'Nombre': lider.nombre || 'Sin nombre',
+                'Cargo': lider.cargo || '-',
+                'Departamento': lider.departamento || 'Sin departamento',
+                'Documento': lider.document_number || 'N/A',
+                'Correo': lider.correo || '-',
+                'Estado': estado
+            };
         });
-        
-      
-        const csvContent = [
-            encabezados.join(','),
-            ...filas.map(fila => fila.map(celda => `"${celda}"`).join(','))
-        ].join('\n');
-        
 
-        const BOM = '\uFEFF';
-        const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+        // Crear hoja de Excel
+        const ws = XLSX.utils.json_to_sheet(dataToExport);
         
+        // Ajustar ancho de columnas automáticamente
+        const colWidths = [
+            { wch: 30 },  // Nombre
+            { wch: 35 },  // Cargo
+            { wch: 25 },  // Departamento
+            { wch: 15 },  // Documento
+            { wch: 30 },  // Correo
+            { wch: 15 }   // Estado
+        ];
+        ws['!cols'] = colWidths;
 
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
+        // Crear libro de Excel
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Asistencia Coordinadores");
         
-
+        // Descargar archivo
         const fecha = new Date().toLocaleDateString('es-CO').replace(/\//g, '-');
-        link.setAttribute('download', `Asistencia_Coordinadores_${fecha}.csv`);
-        
-
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        const fileName = `Asistencia_Coordinadores_${fecha}.xlsx`;
+        XLSX.writeFile(wb, fileName);
     };
 
     if (loading) {
